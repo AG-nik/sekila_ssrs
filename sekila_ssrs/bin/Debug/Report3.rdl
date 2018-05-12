@@ -582,11 +582,13 @@ Fields!Avg_Rent_Days.Value)))))))))</Value>
                     <Style />
                   </TextRun>
                 </TextRuns>
-                <Style />
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox11</rd:DefaultName>
-            <Top>0.06888in</Top>
+            <Top>0.055in</Top>
             <Left>0.04667in</Left>
             <Height>0.44723in</Height>
             <Width>6.45333in</Width>
