@@ -3,15 +3,15 @@
   <df:DefaultFontFamily>Segoe UI</df:DefaultFontFamily>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
-    <DataSource Name="Sekila_cube">
-      <DataSourceReference>Sekila_cube</DataSourceReference>
-      <rd:SecurityType>None</rd:SecurityType>
-      <rd:DataSourceID>97b8ae19-918b-426d-9f79-fc246e3a8f8d</rd:DataSourceID>
-    </DataSource>
     <DataSource Name="Sekila_DWH">
       <DataSourceReference>Sekila_DWH</DataSourceReference>
       <rd:SecurityType>None</rd:SecurityType>
-      <rd:DataSourceID>ac87eda1-661d-467c-ba9d-fe4db3be63f0</rd:DataSourceID>
+      <rd:DataSourceID>529a3f34-1c72-4f4a-84be-fb66e067491d</rd:DataSourceID>
+    </DataSource>
+    <DataSource Name="Sekila_cube">
+      <DataSourceReference>Sekila_cube</DataSourceReference>
+      <rd:SecurityType>None</rd:SecurityType>
+      <rd:DataSourceID>cec83796-ea63-4c0c-a645-ac1c1018ddef</rd:DataSourceID>
     </DataSource>
   </DataSources>
   <DataSets>
@@ -19,15 +19,19 @@
       <Query>
         <DataSourceName>Sekila_DWH</DataSourceName>
         <QueryParameters>
-          <QueryParameter Name="@customer_id">
-            <Value>=Parameters!Customer.Value</Value>
+          <QueryParameter Name="@employee">
+            <Value>=Parameters!employee.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>SELECT first_name, last_name, email, address, city, country, s_id, g_id, customer_id
-FROM     dimCustomer
-WHERE  (customer_id = @customer_id)</CommandText>
+        <CommandText>SELECT employee_id, first_name, last_name, store_address, store_city, store_country, store_id, s_id, g_id
+FROM     dimEmployee
+WHERE  (employee_id = @employee)</CommandText>
       </Query>
       <Fields>
+        <Field Name="employee_id">
+          <DataField>employee_id</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
         <Field Name="first_name">
           <DataField>first_name</DataField>
           <rd:TypeName>System.String</rd:TypeName>
@@ -36,42 +40,38 @@ WHERE  (customer_id = @customer_id)</CommandText>
           <DataField>last_name</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="email">
-          <DataField>email</DataField>
+        <Field Name="store_address">
+          <DataField>store_address</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="address">
-          <DataField>address</DataField>
+        <Field Name="store_city">
+          <DataField>store_city</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="city">
-          <DataField>city</DataField>
+        <Field Name="store_country">
+          <DataField>store_country</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="country">
-          <DataField>country</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
+        <Field Name="store_id">
+          <DataField>store_id</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
         <Field Name="s_id">
           <DataField>s_id</DataField>
-          <rd:TypeName>System.Int16</rd:TypeName>
+          <rd:TypeName>System.Byte</rd:TypeName>
         </Field>
         <Field Name="g_id">
           <DataField>g_id</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
-        <Field Name="customer_id">
-          <DataField>customer_id</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
       </Fields>
     </DataSet>
-    <DataSet Name="Customers2">
+    <DataSet Name="employee">
       <Query>
         <DataSourceName>Sekila_cube</DataSourceName>
-        <CommandText>WITH MEMBER [Measures].[ParameterCaption] AS [Dim Customer].[Customer Id].CURRENTMEMBER.MEMBER_CAPTION
+        <CommandText>WITH MEMBER [Measures].[ParameterCaption] AS [Dim Employee].[Employee Id].CURRENTMEMBER.MEMBER_CAPTION
 SELECT {[Measures].[ParameterCaption]} ON COLUMNS , 
-{[Dim Customer].[Full Name].[Full Name].ALLMEMBERS * [Dim Customer].[Customer Id].[Customer Id].ALLMEMBERS}  ON ROWS FROM [Sakila_DWH]</CommandText>
+{[Dim Employee].[Full Name].[Full Name].ALLMEMBERS * [Dim Employee].[Employee Id].[Employee Id].ALLMEMBERS}  ON ROWS FROM [Sakila_DWH]</CommandText>
         <rd:DesignerState>
           <QueryDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.microsoft.com/AnalysisServices/QueryDefinition">
             <CommandType>MDX</CommandType>
@@ -81,23 +81,23 @@ SELECT {[Measures].[ParameterCaption]} ON COLUMNS ,
                 <Items>
                   <Item>
                     <ID xsi:type="Level">
-                      <DimensionName>Dim Customer</DimensionName>
+                      <DimensionName>Dim Employee</DimensionName>
                       <HierarchyName>Full Name</HierarchyName>
-                      <HierarchyUniqueName>[Dim Customer].[Full Name]</HierarchyUniqueName>
+                      <HierarchyUniqueName>[Dim Employee].[Full Name]</HierarchyUniqueName>
                       <LevelName>Full Name</LevelName>
-                      <UniqueName>[Dim Customer].[Full Name].[Full Name]</UniqueName>
+                      <UniqueName>[Dim Employee].[Full Name].[Full Name]</UniqueName>
                     </ID>
                     <ItemCaption>Full Name</ItemCaption>
                   </Item>
                   <Item>
                     <ID xsi:type="Level">
-                      <DimensionName>Dim Customer</DimensionName>
-                      <HierarchyName>Customer Id</HierarchyName>
-                      <HierarchyUniqueName>[Dim Customer].[Customer Id]</HierarchyUniqueName>
-                      <LevelName>Customer Id</LevelName>
-                      <UniqueName>[Dim Customer].[Customer Id].[Customer Id]</UniqueName>
+                      <DimensionName>Dim Employee</DimensionName>
+                      <HierarchyName>Employee Id</HierarchyName>
+                      <HierarchyUniqueName>[Dim Employee].[Employee Id]</HierarchyUniqueName>
+                      <LevelName>Employee Id</LevelName>
+                      <UniqueName>[Dim Employee].[Employee Id].[Employee Id]</UniqueName>
                     </ID>
-                    <ItemCaption>Customer Id</ItemCaption>
+                    <ItemCaption>Employee Id</ItemCaption>
                   </Item>
                   <Item>
                     <ID xsi:type="Measure">
@@ -119,9 +119,9 @@ SELECT {[Measures].[ParameterCaption]} ON COLUMNS ,
               <QueryProperties />
             </QuerySpecification>
             <Query>
-              <Statement>WITH MEMBER [Measures].[ParameterCaption] AS [Dim Customer].[Customer Id].CURRENTMEMBER.MEMBER_CAPTION
+              <Statement>WITH MEMBER [Measures].[ParameterCaption] AS [Dim Employee].[Employee Id].CURRENTMEMBER.MEMBER_CAPTION
 SELECT {[Measures].[ParameterCaption]} ON COLUMNS , 
-{[Dim Customer].[Full Name].[Full Name].ALLMEMBERS * [Dim Customer].[Customer Id].[Customer Id].ALLMEMBERS}  ON ROWS FROM [Sakila_DWH]</Statement>
+{[Dim Employee].[Full Name].[Full Name].ALLMEMBERS * [Dim Employee].[Employee Id].[Employee Id].ALLMEMBERS}  ON ROWS FROM [Sakila_DWH]</Statement>
               <ParameterDefinitions />
             </Query>
           </QueryDefinition>
@@ -129,11 +129,11 @@ SELECT {[Measures].[ParameterCaption]} ON COLUMNS ,
       </Query>
       <Fields>
         <Field Name="Full_Name">
-          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Level" UniqueName="[Dim Customer].[Full Name].[Full Name]" /&gt;</DataField>
+          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Level" UniqueName="[Dim Employee].[Full Name].[Full Name]" /&gt;</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="Customer_Id">
-          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Level" UniqueName="[Dim Customer].[Customer Id].[Customer Id]" /&gt;</DataField>
+        <Field Name="Employee_Id">
+          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Level" UniqueName="[Dim Employee].[Employee Id].[Employee Id]" /&gt;</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="ParameterCaption">
@@ -154,7 +154,7 @@ SELECT {[Measures].[ParameterCaption]} ON COLUMNS ,
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>Customer details</Value>
+                    <Value>Employee details</Value>
                     <Style>
                       <FontSize>14pt</FontSize>
                       <FontWeight>Bold</FontWeight>
@@ -203,8 +203,8 @@ SELECT {[Measures].[ParameterCaption]} ON COLUMNS ,
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>1.26294cm</Top>
-            <Left>0.04233cm</Left>
+            <Top>1.17828cm</Top>
+            <Left>0.02117cm</Left>
             <Height>0.71967cm</Height>
             <Width>6.24417cm</Width>
             <ZIndex>1</ZIndex>
@@ -241,7 +241,7 @@ SELECT {[Measures].[ParameterCaption]} ON COLUMNS ,
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>1.26294cm</Top>
+            <Top>1.17828cm</Top>
             <Left>6.2865cm</Left>
             <Height>0.71967cm</Height>
             <Width>9.23713cm</Width>
@@ -280,8 +280,8 @@ SELECT {[Measures].[ParameterCaption]} ON COLUMNS ,
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>1.98261cm</Top>
-            <Left>0.04233cm</Left>
+            <Top>1.82739cm</Top>
+            <Left>0.02117cm</Left>
             <Height>0.71967cm</Height>
             <Width>6.24417cm</Width>
             <ZIndex>3</ZIndex>
@@ -318,7 +318,7 @@ SELECT {[Measures].[ParameterCaption]} ON COLUMNS ,
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>1.98261cm</Top>
+            <Top>1.82739cm</Top>
             <Left>6.2865cm</Left>
             <Height>0.71967cm</Height>
             <Width>9.23713cm</Width>
@@ -345,7 +345,7 @@ SELECT {[Measures].[ParameterCaption]} ON COLUMNS ,
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>E-mail</Value>
+                    <Value>Store ID</Value>
                     <Style>
                       <FontSize>9pt</FontSize>
                       <FontWeight>Bold</FontWeight>
@@ -357,11 +357,51 @@ SELECT {[Measures].[ParameterCaption]} ON COLUMNS ,
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>2.70228cm</Top>
-            <Left>0.04233cm</Left>
+            <Top>2.5259cm</Top>
+            <Left>0.02117cm</Left>
             <Height>0.71967cm</Height>
             <Width>6.24417cm</Width>
             <ZIndex>5</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <BottomBorder>
+                <Color>LightGrey</Color>
+                <Style>Solid</Style>
+              </BottomBorder>
+              <VerticalAlign>Middle</VerticalAlign>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Textbox7">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=First(Fields!store_id.Value, "DataSet1")</Value>
+                    <Style>
+                      <FontSize>9pt</FontSize>
+                      <Color>#444446</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox2</rd:DefaultName>
+            <Top>2.5259cm</Top>
+            <Left>6.2865cm</Left>
+            <Height>0.71967cm</Height>
+            <Width>9.23713cm</Width>
+            <ZIndex>6</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -384,7 +424,7 @@ SELECT {[Measures].[ParameterCaption]} ON COLUMNS ,
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>Address</Value>
+                    <Value>Store Address</Value>
                     <Style>
                       <FontSize>9pt</FontSize>
                       <FontWeight>Bold</FontWeight>
@@ -396,11 +436,11 @@ SELECT {[Measures].[ParameterCaption]} ON COLUMNS ,
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>3.37962cm</Top>
-            <Left>0.04233cm</Left>
+            <Top>3.28084cm</Top>
+            <Left>0.02117cm</Left>
             <Height>0.71967cm</Height>
             <Width>6.24417cm</Width>
-            <ZIndex>6</ZIndex>
+            <ZIndex>7</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -409,6 +449,44 @@ SELECT {[Measures].[ParameterCaption]} ON COLUMNS ,
                 <Color>LightGrey</Color>
                 <Style>Solid</Style>
                 <Width>1pt</Width>
+              </BottomBorder>
+              <VerticalAlign>Middle</VerticalAlign>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Textbox11">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=First(Fields!store_address.Value, "DataSet1")</Value>
+                    <Style>
+                      <FontSize>9pt</FontSize>
+                      <Color>#444446</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox2</rd:DefaultName>
+            <Top>3.28084cm</Top>
+            <Left>6.2865cm</Left>
+            <Height>0.71967cm</Height>
+            <Width>9.23713cm</Width>
+            <ZIndex>8</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <BottomBorder>
+                <Color>LightGrey</Color>
+                <Style>Solid</Style>
               </BottomBorder>
               <VerticalAlign>Middle</VerticalAlign>
               <PaddingLeft>2pt</PaddingLeft>
@@ -436,11 +514,49 @@ SELECT {[Measures].[ParameterCaption]} ON COLUMNS ,
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>4.09929cm</Top>
-            <Left>0.04233cm</Left>
+            <Top>4.00051cm</Top>
+            <Left>0.02117cm</Left>
             <Height>0.71967cm</Height>
             <Width>6.24417cm</Width>
-            <ZIndex>7</ZIndex>
+            <ZIndex>9</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <BottomBorder>
+                <Color>LightGrey</Color>
+                <Style>Solid</Style>
+              </BottomBorder>
+              <VerticalAlign>Middle</VerticalAlign>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Textbox12">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=First(Fields!store_city.Value, "DataSet1")</Value>
+                    <Style>
+                      <FontSize>9pt</FontSize>
+                      <Color>#444446</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox2</rd:DefaultName>
+            <Top>4.00051cm</Top>
+            <Left>6.2865cm</Left>
+            <Height>0.71967cm</Height>
+            <Width>9.23713cm</Width>
+            <ZIndex>10</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -475,11 +591,11 @@ SELECT {[Measures].[ParameterCaption]} ON COLUMNS ,
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>4.81896cm</Top>
-            <Left>0.04233cm</Left>
+            <Top>4.72018cm</Top>
+            <Left>0.02117cm</Left>
             <Height>0.71967cm</Height>
             <Width>6.24417cm</Width>
-            <ZIndex>8</ZIndex>
+            <ZIndex>11</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -496,120 +612,6 @@ SELECT {[Measures].[ParameterCaption]} ON COLUMNS ,
               <PaddingBottom>2pt</PaddingBottom>
             </Style>
           </Textbox>
-          <Textbox Name="Textbox7">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=First(Fields!email.Value, "DataSet1")</Value>
-                    <Style>
-                      <FontSize>9pt</FontSize>
-                      <Color>#444446</Color>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style />
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>2.70228cm</Top>
-            <Left>6.2865cm</Left>
-            <Height>0.71967cm</Height>
-            <Width>9.23713cm</Width>
-            <ZIndex>9</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <BottomBorder>
-                <Color>LightGrey</Color>
-                <Style>Solid</Style>
-              </BottomBorder>
-              <VerticalAlign>Middle</VerticalAlign>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="Textbox11">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=First(Fields!address.Value, "DataSet1")</Value>
-                    <Style>
-                      <FontSize>9pt</FontSize>
-                      <Color>#444446</Color>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style />
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>3.37962cm</Top>
-            <Left>6.2865cm</Left>
-            <Height>0.71967cm</Height>
-            <Width>9.23713cm</Width>
-            <ZIndex>10</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <BottomBorder>
-                <Color>LightGrey</Color>
-                <Style>Solid</Style>
-              </BottomBorder>
-              <VerticalAlign>Middle</VerticalAlign>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="Textbox12">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=First(Fields!city.Value, "DataSet1")</Value>
-                    <Style>
-                      <FontSize>9pt</FontSize>
-                      <Color>#444446</Color>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style />
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>4.09929cm</Top>
-            <Left>6.2865cm</Left>
-            <Height>0.71967cm</Height>
-            <Width>9.23713cm</Width>
-            <ZIndex>11</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <BottomBorder>
-                <Color>LightGrey</Color>
-                <Style>Solid</Style>
-              </BottomBorder>
-              <VerticalAlign>Middle</VerticalAlign>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
           <Textbox Name="Textbox13">
             <CanGrow>true</CanGrow>
             <KeepTogether>true</KeepTogether>
@@ -617,7 +619,7 @@ SELECT {[Measures].[ParameterCaption]} ON COLUMNS ,
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=First(Fields!country.Value, "DataSet1")</Value>
+                    <Value>=First(Fields!store_country.Value, "DataSet1")</Value>
                     <Style>
                       <FontSize>9pt</FontSize>
                       <Color>#444446</Color>
@@ -628,7 +630,7 @@ SELECT {[Measures].[ParameterCaption]} ON COLUMNS ,
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>4.81896cm</Top>
+            <Top>4.72018cm</Top>
             <Left>6.2865cm</Left>
             <Height>0.71967cm</Height>
             <Width>9.23713cm</Width>
@@ -667,51 +669,11 @@ SELECT {[Measures].[ParameterCaption]} ON COLUMNS ,
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>5.53863cm</Top>
-            <Left>0.04233cm</Left>
+            <Top>5.43985cm</Top>
+            <Left>0.02117cm</Left>
             <Height>0.71967cm</Height>
             <Width>6.24417cm</Width>
             <ZIndex>13</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <BottomBorder>
-                <Color>LightGrey</Color>
-                <Style>Solid</Style>
-                <Width>1pt</Width>
-              </BottomBorder>
-              <VerticalAlign>Middle</VerticalAlign>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="Textbox15">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>Key number from db GW</Value>
-                    <Style>
-                      <FontSize>9pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                      <Color>#444446</Color>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style />
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>6.21597cm</Top>
-            <Left>0.04233cm</Left>
-            <Height>0.71967cm</Height>
-            <Width>6.24417cm</Width>
-            <ZIndex>14</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -748,10 +710,50 @@ SELECT {[Measures].[ParameterCaption]} ON COLUMNS ,
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>5.53863cm</Top>
+            <Top>5.43985cm</Top>
             <Left>6.2865cm</Left>
             <Height>0.71967cm</Height>
             <Width>9.23713cm</Width>
+            <ZIndex>14</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <BottomBorder>
+                <Color>LightGrey</Color>
+                <Style>Solid</Style>
+                <Width>1pt</Width>
+              </BottomBorder>
+              <VerticalAlign>Middle</VerticalAlign>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Textbox15">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Key number from db GW</Value>
+                    <Style>
+                      <FontSize>9pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <Color>#444446</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox2</rd:DefaultName>
+            <Top>6.15952cm</Top>
+            <Left>0.02117cm</Left>
+            <Height>0.71967cm</Height>
+            <Width>6.24417cm</Width>
             <ZIndex>15</ZIndex>
             <Style>
               <Border>
@@ -789,7 +791,7 @@ SELECT {[Measures].[ParameterCaption]} ON COLUMNS ,
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>6.21597cm</Top>
+            <Top>6.15952cm</Top>
             <Left>6.2865cm</Left>
             <Height>0.71967cm</Height>
             <Width>9.23713cm</Width>
@@ -811,7 +813,7 @@ SELECT {[Measures].[ParameterCaption]} ON COLUMNS ,
             </Style>
           </Textbox>
         </ReportItems>
-        <Height>6.93564cm</Height>
+        <Height>6.87919cm</Height>
         <Style />
       </Body>
       <Width>15.56596cm</Width>
@@ -828,13 +830,13 @@ SELECT {[Measures].[ParameterCaption]} ON COLUMNS ,
     </ReportSection>
   </ReportSections>
   <ReportParameters>
-    <ReportParameter Name="Customer">
+    <ReportParameter Name="employee">
       <DataType>String</DataType>
-      <Prompt>Customer</Prompt>
+      <Prompt>Employee</Prompt>
       <ValidValues>
         <DataSetReference>
-          <DataSetName>Customers2</DataSetName>
-          <ValueField>Customer_Id</ValueField>
+          <DataSetName>employee</DataSetName>
+          <ValueField>Employee_Id</ValueField>
           <LabelField>Full_Name</LabelField>
         </DataSetReference>
       </ValidValues>
@@ -848,11 +850,11 @@ SELECT {[Measures].[ParameterCaption]} ON COLUMNS ,
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
           <RowIndex>0</RowIndex>
-          <ParameterName>Customer</ParameterName>
+          <ParameterName>employee</ParameterName>
         </CellDefinition>
       </CellDefinitions>
     </GridLayoutDefinition>
   </ReportParametersLayout>
   <rd:ReportUnitType>Cm</rd:ReportUnitType>
-  <rd:ReportID>a39af782-adea-4303-9515-f9442802fe18</rd:ReportID>
+  <rd:ReportID>0730161d-4bed-4164-97d9-01c5704fefa1</rd:ReportID>
 </Report>

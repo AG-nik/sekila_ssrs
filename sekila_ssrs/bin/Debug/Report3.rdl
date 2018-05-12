@@ -24,7 +24,7 @@
           </QueryParameter>
         </QueryParameters>
         <CommandText>WITH MEMBER [Measures].[Avg Rent Days] AS round ([Measures].[Rent Days]/[Measures].[Rent Days Count]) SELECT NON EMPTY { [Measures].[Amount], [Measures].[Facts Count], [Measures].[Avg Rent Days] } ON COLUMNS, 
-NON EMPTY { ([Dim Customer].[Customer Id].[Customer Id].ALLMEMBERS * strtoset (@category_name))}  ON ROWS 
+NON EMPTY { ([Dim Customer].[Customer Id].[Customer Id].ALLMEMBERS * [Dim Customer].[Full Name].[Full Name].ALLMEMBERS * strtoset (@category_name))}  ON ROWS 
 FROM [Sakila_DWH]</CommandText>
         <rd:DesignerState>
           <QueryDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.microsoft.com/AnalysisServices/QueryDefinition">
@@ -42,6 +42,16 @@ FROM [Sakila_DWH]</CommandText>
                       <UniqueName>[Dim Customer].[Customer Id].[Customer Id]</UniqueName>
                     </ID>
                     <ItemCaption>Customer Id</ItemCaption>
+                  </Item>
+                  <Item>
+                    <ID xsi:type="Level">
+                      <DimensionName>Dim Customer</DimensionName>
+                      <HierarchyName>Full Name</HierarchyName>
+                      <HierarchyUniqueName>[Dim Customer].[Full Name]</HierarchyUniqueName>
+                      <LevelName>Full Name</LevelName>
+                      <UniqueName>[Dim Customer].[Full Name].[Full Name]</UniqueName>
+                    </ID>
+                    <ItemCaption>Full Name</ItemCaption>
                   </Item>
                   <Item>
                     <ID xsi:type="Level">
@@ -90,7 +100,7 @@ FROM [Sakila_DWH]</CommandText>
             </QuerySpecification>
             <Query>
               <Statement>WITH MEMBER [Measures].[Avg Rent Days] AS round ([Measures].[Rent Days]/[Measures].[Rent Days Count]) SELECT NON EMPTY { [Measures].[Amount], [Measures].[Facts Count], [Measures].[Avg Rent Days] } ON COLUMNS, 
-NON EMPTY { ([Dim Customer].[Customer Id].[Customer Id].ALLMEMBERS * strtoset (@category_name))}  ON ROWS 
+NON EMPTY { ([Dim Customer].[Customer Id].[Customer Id].ALLMEMBERS * [Dim Customer].[Full Name].[Full Name].ALLMEMBERS * strtoset (@category_name))}  ON ROWS 
 FROM [Sakila_DWH]</Statement>
               <ParameterDefinitions>
                 <ParameterDefinition>
@@ -115,6 +125,10 @@ FROM [Sakila_DWH]</Statement>
       <Fields>
         <Field Name="Customer_Id">
           <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Level" UniqueName="[Dim Customer].[Customer Id].[Customer Id]" /&gt;</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Full_Name">
+          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Level" UniqueName="[Dim Customer].[Full Name].[Full Name]" /&gt;</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Category_Name">
@@ -152,7 +166,7 @@ FROM     dimCategory</CommandText>
       <Query>
         <DataSourceName>Sekila_cube</DataSourceName>
         <CommandText>WITH MEMBER [Measures].[Avg Rent Days] AS round ([Measures].[Rent Days]/[Measures].[Rent Days Count]) SELECT NON EMPTY { [Measures].[Amount], [Measures].[Facts Count], [Measures].[Avg Rent Days] } ON COLUMNS, 
-NON EMPTY { ([Dim Customer].[Customer Id].[Customer Id].ALLMEMBERS)}  ON ROWS 
+NON EMPTY { ([Dim Customer].[Customer Id].[Customer Id].ALLMEMBERS * [Dim Customer].[Full Name].[Full Name].ALLMEMBERS )}  ON ROWS 
 FROM [Sakila_DWH]</CommandText>
         <rd:DesignerState>
           <QueryDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.microsoft.com/AnalysisServices/QueryDefinition">
@@ -170,6 +184,16 @@ FROM [Sakila_DWH]</CommandText>
                       <UniqueName>[Dim Customer].[Customer Id].[Customer Id]</UniqueName>
                     </ID>
                     <ItemCaption>Customer Id</ItemCaption>
+                  </Item>
+                  <Item>
+                    <ID xsi:type="Level">
+                      <DimensionName>Dim Customer</DimensionName>
+                      <HierarchyName>Full Name</HierarchyName>
+                      <HierarchyUniqueName>[Dim Customer].[Full Name]</HierarchyUniqueName>
+                      <LevelName>Full Name</LevelName>
+                      <UniqueName>[Dim Customer].[Full Name].[Full Name]</UniqueName>
+                    </ID>
+                    <ItemCaption>Full Name</ItemCaption>
                   </Item>
                   <Item>
                     <ID xsi:type="Measure">
@@ -208,7 +232,7 @@ FROM [Sakila_DWH]</CommandText>
             </QuerySpecification>
             <Query>
               <Statement>WITH MEMBER [Measures].[Avg Rent Days] AS round ([Measures].[Rent Days]/[Measures].[Rent Days Count]) SELECT NON EMPTY { [Measures].[Amount], [Measures].[Facts Count], [Measures].[Avg Rent Days] } ON COLUMNS, 
-NON EMPTY { ([Dim Customer].[Customer Id].[Customer Id].ALLMEMBERS)}  ON ROWS 
+NON EMPTY { ([Dim Customer].[Customer Id].[Customer Id].ALLMEMBERS * [Dim Customer].[Full Name].[Full Name].ALLMEMBERS )}  ON ROWS 
 FROM [Sakila_DWH]</Statement>
               <ParameterDefinitions />
             </Query>
@@ -218,6 +242,10 @@ FROM [Sakila_DWH]</Statement>
       <Fields>
         <Field Name="Customer_Id">
           <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Level" UniqueName="[Dim Customer].[Customer Id].[Customer Id]" /&gt;</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Full_Name">
+          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Level" UniqueName="[Dim Customer].[Full Name].[Full Name]" /&gt;</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Amount">
@@ -243,7 +271,7 @@ FROM [Sakila_DWH]</Statement>
             <TablixBody>
               <TablixColumns>
                 <TablixColumn>
-                  <Width>3.47in</Width>
+                  <Width>4.47in</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>1in</Width>
@@ -257,7 +285,7 @@ FROM [Sakila_DWH]</Statement>
               </TablixColumns>
               <TablixRows>
                 <TablixRow>
-                  <Height>0.25in</Height>
+                  <Height>0.50011in</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -268,11 +296,16 @@ FROM [Sakila_DWH]</Statement>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Customer Id</Value>
-                                  <Style />
+                                  <Value>Customer</Value>
+                                  <Style>
+                                    <FontWeight>Bold</FontWeight>
+                                    <Color>#444446</Color>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox1</rd:DefaultName>
@@ -281,6 +314,7 @@ FROM [Sakila_DWH]</Statement>
                               <Color>LightGrey</Color>
                               <Style>Solid</Style>
                             </Border>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -299,10 +333,15 @@ FROM [Sakila_DWH]</Statement>
                               <TextRuns>
                                 <TextRun>
                                   <Value>Amount</Value>
-                                  <Style />
+                                  <Style>
+                                    <FontWeight>Bold</FontWeight>
+                                    <Color>#444446</Color>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox3</rd:DefaultName>
@@ -311,6 +350,7 @@ FROM [Sakila_DWH]</Statement>
                               <Color>LightGrey</Color>
                               <Style>Solid</Style>
                             </Border>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -328,11 +368,16 @@ FROM [Sakila_DWH]</Statement>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Facts Count</Value>
-                                  <Style />
+                                  <Value>Operations quantity</Value>
+                                  <Style>
+                                    <FontWeight>Bold</FontWeight>
+                                    <Color>#444446</Color>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox5</rd:DefaultName>
@@ -341,6 +386,7 @@ FROM [Sakila_DWH]</Statement>
                               <Color>LightGrey</Color>
                               <Style>Solid</Style>
                             </Border>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -358,13 +404,17 @@ FROM [Sakila_DWH]</Statement>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Avg Rent Days</Value>
+                                  <Value>Average rent days</Value>
                                   <Style>
                                     <FontFamily>Arial</FontFamily>
+                                    <FontWeight>Bold</FontWeight>
+                                    <Color>#444446</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox7</rd:DefaultName>
@@ -373,6 +423,7 @@ FROM [Sakila_DWH]</Statement>
                               <Color>LightGrey</Color>
                               <Style>Solid</Style>
                             </Border>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -395,8 +446,25 @@ FROM [Sakila_DWH]</Statement>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!Customer_Id.Value</Value>
-                                  <Style />
+                                  <Value>=Fields!Full_Name.Value</Value>
+                                  <ActionInfo>
+                                    <Actions>
+                                      <Action>
+                                        <Drillthrough>
+                                          <ReportName>Customer details</ReportName>
+                                          <Parameters>
+                                            <Parameter Name="customer">
+                                              <Value>=Fields!Customer_Id.Value</Value>
+                                            </Parameter>
+                                          </Parameters>
+                                        </Drillthrough>
+                                      </Action>
+                                    </Actions>
+                                  </ActionInfo>
+                                  <Style>
+                                    <FontSize>9pt</FontSize>
+                                    <Color>#444446</Color>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style />
@@ -426,7 +494,10 @@ FROM [Sakila_DWH]</Statement>
                               <TextRuns>
                                 <TextRun>
                                   <Value>=Fields!Amount.Value</Value>
-                                  <Style />
+                                  <Style>
+                                    <FontSize>9pt</FontSize>
+                                    <Color>#444446</Color>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style />
@@ -456,7 +527,10 @@ FROM [Sakila_DWH]</Statement>
                               <TextRuns>
                                 <TextRun>
                                   <Value>=Fields!Facts_Count.Value</Value>
-                                  <Style />
+                                  <Style>
+                                    <FontSize>9pt</FontSize>
+                                    <Color>#444446</Color>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style />
@@ -488,6 +562,8 @@ FROM [Sakila_DWH]</Statement>
                                   <Value>=Fields!Avg_Rent_Days.Value</Value>
                                   <Style>
                                     <FontFamily>Arial</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                    <Color>#444446</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -557,10 +633,10 @@ Fields!Avg_Rent_Days.Value)))))))))</Value>
                 <Direction>Descending</Direction>
               </SortExpression>
             </SortExpressions>
-            <Top>0.53in</Top>
-            <Left>0.03in</Left>
-            <Height>0.5in</Height>
-            <Width>6.47in</Width>
+            <Top>0.66113in</Top>
+            <Left>0in</Left>
+            <Height>0.75011in</Height>
+            <Width>7.47in</Width>
             <Visibility>
               <Hidden>=Parameters!Filter_by_categories.Value=0</Hidden>
             </Visibility>
@@ -578,25 +654,29 @@ Fields!Avg_Rent_Days.Value)))))))))</Value>
                 <TextRuns>
                   <TextRun>
                     <Label>Title</Label>
-                    <Value>="Report analitics of DVD rent by Customers - " + Parameters!Order.Label + " " + Parameters!Show.Label +" for category/categories " + Parameters!category_name.Value(0)</Value>
-                    <Style />
+                    <Value>="ANALYTIC REPORT BY CUSTOMERS - " + Parameters!Order.Label + " " + Parameters!Show.Label</Value>
+                    <Style>
+                      <FontSize>14pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <Color>White</Color>
+                    </Style>
                   </TextRun>
                 </TextRuns>
                 <Style>
-                  <TextAlign>Center</TextAlign>
+                  <TextAlign>Left</TextAlign>
                 </Style>
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox11</rd:DefaultName>
-            <Top>0.055in</Top>
-            <Left>0.04667in</Left>
-            <Height>0.44723in</Height>
-            <Width>6.45333in</Width>
+            <Left>0in</Left>
+            <Height>0.33056in</Height>
+            <Width>5.47in</Width>
             <ZIndex>1</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
               </Border>
+              <BackgroundColor>#00c4d9</BackgroundColor>
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
@@ -607,7 +687,7 @@ Fields!Avg_Rent_Days.Value)))))))))</Value>
             <TablixBody>
               <TablixColumns>
                 <TablixColumn>
-                  <Width>8.8138cm</Width>
+                  <Width>11.3538cm</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>2.54cm</Width>
@@ -621,7 +701,7 @@ Fields!Avg_Rent_Days.Value)))))))))</Value>
               </TablixColumns>
               <TablixRows>
                 <TablixRow>
-                  <Height>0.6cm</Height>
+                  <Height>1.12917cm</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -632,11 +712,16 @@ Fields!Avg_Rent_Days.Value)))))))))</Value>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Customer Id</Value>
-                                  <Style />
+                                  <Value>Customer</Value>
+                                  <Style>
+                                    <FontWeight>Bold</FontWeight>
+                                    <Color>#444446</Color>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox2</rd:DefaultName>
@@ -645,6 +730,7 @@ Fields!Avg_Rent_Days.Value)))))))))</Value>
                               <Color>LightGrey</Color>
                               <Style>Solid</Style>
                             </Border>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -663,10 +749,15 @@ Fields!Avg_Rent_Days.Value)))))))))</Value>
                               <TextRuns>
                                 <TextRun>
                                   <Value>Amount</Value>
-                                  <Style />
+                                  <Style>
+                                    <FontWeight>Bold</FontWeight>
+                                    <Color>#444446</Color>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox6</rd:DefaultName>
@@ -675,6 +766,7 @@ Fields!Avg_Rent_Days.Value)))))))))</Value>
                               <Color>LightGrey</Color>
                               <Style>Solid</Style>
                             </Border>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -692,11 +784,16 @@ Fields!Avg_Rent_Days.Value)))))))))</Value>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Facts Count</Value>
-                                  <Style />
+                                  <Value>Operations quantity</Value>
+                                  <Style>
+                                    <FontWeight>Bold</FontWeight>
+                                    <Color>#444446</Color>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox9</rd:DefaultName>
@@ -705,6 +802,7 @@ Fields!Avg_Rent_Days.Value)))))))))</Value>
                               <Color>LightGrey</Color>
                               <Style>Solid</Style>
                             </Border>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -722,13 +820,17 @@ Fields!Avg_Rent_Days.Value)))))))))</Value>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Avg Rent Days</Value>
+                                  <Value>Average rent days</Value>
                                   <Style>
                                     <FontFamily>Arial</FontFamily>
+                                    <FontWeight>Bold</FontWeight>
+                                    <Color>#444446</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox12</rd:DefaultName>
@@ -737,6 +839,7 @@ Fields!Avg_Rent_Days.Value)))))))))</Value>
                               <Color>LightGrey</Color>
                               <Style>Solid</Style>
                             </Border>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -759,8 +862,25 @@ Fields!Avg_Rent_Days.Value)))))))))</Value>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!Customer_Id.Value</Value>
-                                  <Style />
+                                  <Value>=Fields!Full_Name.Value</Value>
+                                  <ActionInfo>
+                                    <Actions>
+                                      <Action>
+                                        <Drillthrough>
+                                          <ReportName>Customer details</ReportName>
+                                          <Parameters>
+                                            <Parameter Name="Customer">
+                                              <Value>=Fields!Customer_Id.Value</Value>
+                                            </Parameter>
+                                          </Parameters>
+                                        </Drillthrough>
+                                      </Action>
+                                    </Actions>
+                                  </ActionInfo>
+                                  <Style>
+                                    <FontSize>9pt</FontSize>
+                                    <Color>#444446</Color>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style />
@@ -790,7 +910,10 @@ Fields!Avg_Rent_Days.Value)))))))))</Value>
                               <TextRuns>
                                 <TextRun>
                                   <Value>=Fields!Amount.Value</Value>
-                                  <Style />
+                                  <Style>
+                                    <FontSize>9pt</FontSize>
+                                    <Color>#444446</Color>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style />
@@ -820,7 +943,10 @@ Fields!Avg_Rent_Days.Value)))))))))</Value>
                               <TextRuns>
                                 <TextRun>
                                   <Value>=Fields!Facts_Count.Value</Value>
-                                  <Style />
+                                  <Style>
+                                    <FontSize>9pt</FontSize>
+                                    <Color>#444446</Color>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style />
@@ -852,6 +978,8 @@ Fields!Avg_Rent_Days.Value)))))))))</Value>
                                   <Value>=Fields!Avg_Rent_Days.Value</Value>
                                   <Style>
                                     <FontFamily>Arial</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                    <Color>#444446</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -921,10 +1049,10 @@ Fields!Avg_Rent_Days.Value)))))))))</Value>
                 <Direction>Descending</Direction>
               </SortExpression>
             </SortExpressions>
-            <Top>2.65148cm</Top>
-            <Left>0.0762cm</Left>
-            <Height>1.2cm</Height>
-            <Width>16.4338cm</Width>
+            <Top>3.58454cm</Top>
+            <Left>0cm</Left>
+            <Height>1.72917cm</Height>
+            <Width>18.9738cm</Width>
             <ZIndex>2</ZIndex>
             <Visibility>
               <Hidden>=Parameters!Filter_by_categories.Value=1</Hidden>
@@ -935,11 +1063,48 @@ Fields!Avg_Rent_Days.Value)))))))))</Value>
               </Border>
             </Style>
           </Tablix>
+          <Textbox Name="Textbox13">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Label>Title</Label>
+                    <Value>=iif(Parameters!Filter_by_categories.Value = 1, "FOR FILM CATEGORY " + Parameters!category_name.Value, "FOR ALL FILM CATEGORIES")</Value>
+                    <Style>
+                      <FontSize>14pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <Color>White</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox11</rd:DefaultName>
+            <Top>0.33056in</Top>
+            <Height>0.33056in</Height>
+            <Width>5.47in</Width>
+            <ZIndex>3</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <BackgroundColor>#00c4d9</BackgroundColor>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
         </ReportItems>
-        <Height>3.89467cm</Height>
+        <Height>5.67352cm</Height>
         <Style />
       </Body>
-      <Width>16.51cm</Width>
+      <Width>18.9738cm</Width>
       <Page>
         <PageHeight>29.7cm</PageHeight>
         <PageWidth>21cm</PageWidth>
@@ -985,11 +1150,11 @@ Fields!Avg_Rent_Days.Value)))))))))</Value>
           </ParameterValue>
           <ParameterValue>
             <Value>2</Value>
-            <Label>Operations count</Label>
+            <Label>Operations quantity</Label>
           </ParameterValue>
           <ParameterValue>
             <Value>3</Value>
-            <Label>Rent days</Label>
+            <Label>Average rent days</Label>
           </ParameterValue>
         </ParameterValues>
       </ValidValues>
