@@ -92,23 +92,7 @@ SELECT
         ([Measures].[First Week Facts Count])  } ON COLUMNS,
  NON EMPTY   {[Dim Date].[Calendar_weeks].[Month Number Of Year].Members} ON ROWS
 FROM [Sakila_DWH]</Statement>
-              <ParameterDefinitions>
-                <ParameterDefinition>
-                  <Name>year</Name>
-                  <DefaultValues>
-                    <DefaultValue>[Dim Date].[Calendar Year].&amp;[2001]</DefaultValue>
-                  </DefaultValues>
-                  <Caption>year</Caption>
-                  <HierarchyUniqueName>[Dim Date].[Calendar Year]</HierarchyUniqueName>
-                  <ParameterValuesQuery>
-                    <Statement>WITH MEMBER [Measures].[ParameterCaption] AS [Dim Date].[Calendar Year].CURRENTMEMBER.MEMBER_CAPTION MEMBER [Measures].[ParameterValue] AS [Dim Date].[Calendar Year].CURRENTMEMBER.UNIQUENAME MEMBER [Measures].[ParameterLevel] AS [Dim Date].[Calendar Year].CURRENTMEMBER.LEVEL.ORDINAL SELECT {[Measures].[ParameterCaption], [Measures].[ParameterValue], [Measures].[ParameterLevel]} ON COLUMNS , [Dim Date].[Calendar Year].ALLMEMBERS ON ROWS FROM [Sakila_DWH]</Statement>
-                    <ParameterizedStatement>
-                      <ReferencedParameters />
-                    </ParameterizedStatement>
-                  </ParameterValuesQuery>
-                  <MultipleValues>true</MultipleValues>
-                </ParameterDefinition>
-              </ParameterDefinitions>
+              <ParameterDefinitions />
             </Query>
           </QueryDefinition>
         </rd:DesignerState>
@@ -141,7 +125,7 @@ FROM [Sakila_DWH]</Statement>
             <ChartCategoryHierarchy>
               <ChartMembers>
                 <ChartMember>
-                  <Group Name="Chart2_CategoryGroup">
+                  <Group Name="Chart2_CategoryGroup1">
                     <GroupExpressions>
                       <GroupExpression>=Fields!Month_Number_Of_Year.Value</GroupExpression>
                     </GroupExpressions>
@@ -175,7 +159,13 @@ FROM [Sakila_DWH]</Statement>
                         <Y>=Sum(Fields!First_Week_Amount.Value)</Y>
                       </ChartDataPointValues>
                       <ChartDataLabel>
-                        <Style />
+                        <Style>
+                          <Format>'$'0.00;('$'0.00)</Format>
+                          <rd:FormatSymbolCulture>en-US</rd:FormatSymbolCulture>
+                        </Style>
+                        <UseValueAsLabel>true</UseValueAsLabel>
+                        <Visible>true</Visible>
+                        <Rotation>-50</Rotation>
                       </ChartDataLabel>
                       <Style />
                       <ChartMarker>
@@ -197,6 +187,7 @@ FROM [Sakila_DWH]</Statement>
                   <ValueAxisName>Primary</ValueAxisName>
                   <CategoryAxisName>Primary</CategoryAxisName>
                   <ChartSmartLabel>
+                    <Disabled>true</Disabled>
                     <CalloutLineColor>Black</CalloutLineColor>
                     <MinMovingDistance>0pt</MinMovingDistance>
                   </ChartSmartLabel>
@@ -210,6 +201,8 @@ FROM [Sakila_DWH]</Statement>
                       </ChartDataPointValues>
                       <ChartDataLabel>
                         <Style />
+                        <UseValueAsLabel>true</UseValueAsLabel>
+                        <Visible>true</Visible>
                       </ChartDataLabel>
                       <Style />
                       <ChartMarker>
@@ -552,21 +545,16 @@ FROM [Sakila_DWH]</Statement>
   </ReportSections>
   <ReportParameters>
     <ReportParameter Name="year">
-      <DataType>Integer</DataType>
-      <DefaultValue>
-        <DataSetReference>
-          <DataSetName>DataSet1</DataSetName>
-          <ValueField>Calendar_Year</ValueField>
-        </DataSetReference>
-      </DefaultValue>
+      <DataType>String</DataType>
       <Prompt>Choose year</Prompt>
       <ValidValues>
         <DataSetReference>
           <DataSetName>DataSet1</DataSetName>
-          <ValueField>Calendar_Year</ValueField>
-          <LabelField>Calendar_Year</LabelField>
+          <ValueField>Month_Number_Of_Year</ValueField>
+          <LabelField>Month_Number_Of_Year</LabelField>
         </DataSetReference>
       </ValidValues>
+      <MultiValue>true</MultiValue>
     </ReportParameter>
     <ReportParameter Name="sort">
       <DataType>String</DataType>
