@@ -53,9 +53,10 @@
     <DataSource Include="Sekila_DWH.rds" />
   </ItemGroup>
   <ItemGroup>
+    <Report Include="Customer details.rdl" />
     <Report Include="Report1.rdl" />
     <Report Include="Report2.rdl" />
-    <Report Include="Report3.rdl" />
+    <Report Include="Report3 - customers analitycs.rdl" />
     <Report Include="Report4.rdl" />
     <Report Include="Report5.rdl" />
     <Report Include="Report6.rdl" />
