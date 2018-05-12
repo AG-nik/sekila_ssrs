@@ -389,8 +389,8 @@
       <Query>
         <DataSourceName>Sekila_cube</DataSourceName>
         <QueryParameters>
-          <QueryParameter Name="city">
-            <Value>=Parameters!city.Value</Value>
+          <QueryParameter Name="city_name">
+            <Value>=Parameters!city_name.Value</Value>
           </QueryParameter>
           <QueryParameter Name="employee">
             <Value>=Parameters!employee.Value</Value>
@@ -401,20 +401,114 @@
           <QueryParameter Name="translation_language">
             <Value>=Parameters!translation_language.Value</Value>
           </QueryParameter>
-          <QueryParameter Name="date">
-            <Value>=Parameters!date.Value</Value>
+          <QueryParameter Name="start_month">
+            <Value>=Parameters!start_month.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="end_month">
+            <Value>=Parameters!end_month.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="category_name">
+            <Value>=Parameters!category_name.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>WITH MEMBER [Measures].[Avg Rent Days] AS round([Measures].[Rent Days]/[Measures].[Rent Days Count], 2) SELECT NON EMPTY { [Measures].[Amount], [Measures].[Facts Count], [Measures].[Rent Days], [Measures].[Avg Rent Days] } ON COLUMNS, 
-NON EMPTY { (strtoset(@city) * strtoset (@employee) * strtoset (@original_language) * strtoset (@translation_language) * strtoset (@date) ) } ON ROWS 
-FROM [Sakila_DWH] </CommandText>
+        <CommandText>WITH
+MEMBER [Measures].[Avg 3M Amount] AS round(Avg([Dim Date].[Calendar].prevmember.firstchild:[Dim Date].[Calendar].nextmember.lastchild, [Measures].[Amount]), 2)
+
+MEMBER [Measures].[Avg 3M Facts Count] AS round (Avg([Dim Date].[Calendar].prevmember.firstchild:[Dim Date].[Calendar].nextmember.lastchild, [Measures].[Facts Count]), 2)
+
+MEMBER [Measures].[Avg 3M Rent Days] AS round (Sum ([Dim Date].[Calendar].prevmember.firstchild:[Dim Date].[Calendar].nextmember.lastchild, [Measures].[Rent Days])/Sum ([Dim Date].[Calendar].prevmember.firstchild:[Dim Date].[Calendar].nextmember.lastchild, [Measures].[Rent Days Count]), 2)
+
+SELECT 
+ { [Measures].[Amount], [Measures].[Facts Count], [Measures].[Rent Days], [Measures].[Avg 3M Amount], [Measures].[Avg 3M Facts Count], [Measures].[Avg 3M Rent Days] } ON COLUMNS, 
+
+ { (strtomember (@start_month):strtomember (@end_month)) * strtoset (@city_name)  * strtoset (@employee)  * strtoset (@original_language)  * strtoset (@translation_language)  * strtoset (@category_name)  }  ON ROWS 
+FROM [Sakila_DWH]</CommandText>
         <rd:DesignerState>
           <QueryDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.microsoft.com/AnalysisServices/QueryDefinition">
             <CommandType>MDX</CommandType>
             <Type>Query</Type>
             <QuerySpecification xsi:type="MDXQuerySpecification">
               <Select>
-                <Items />
+                <Items>
+                  <Item>
+                    <ID xsi:type="Level">
+                      <DimensionName>Dim Date</DimensionName>
+                      <HierarchyName>Calendar</HierarchyName>
+                      <HierarchyUniqueName>[Dim Date].[Calendar]</HierarchyUniqueName>
+                      <LevelName>Calendar Year</LevelName>
+                      <UniqueName>[Dim Date].[Calendar].[Calendar Year]</UniqueName>
+                    </ID>
+                    <ItemCaption>Calendar Year</ItemCaption>
+                  </Item>
+                  <Item>
+                    <ID xsi:type="Level">
+                      <DimensionName>Dim Date</DimensionName>
+                      <HierarchyName>Calendar</HierarchyName>
+                      <HierarchyUniqueName>[Dim Date].[Calendar]</HierarchyUniqueName>
+                      <LevelName>Month Number Of Year</LevelName>
+                      <UniqueName>[Dim Date].[Calendar].[Month Number Of Year]</UniqueName>
+                    </ID>
+                    <ItemCaption>Month Number Of Year</ItemCaption>
+                  </Item>
+                  <Item>
+                    <ID xsi:type="Level">
+                      <DimensionName>Dim Category</DimensionName>
+                      <HierarchyName>Category Name</HierarchyName>
+                      <HierarchyUniqueName>[Dim Category].[Category Name]</HierarchyUniqueName>
+                      <LevelName>Category Name</LevelName>
+                      <UniqueName>[Dim Category].[Category Name].[Category Name]</UniqueName>
+                    </ID>
+                    <ItemCaption>Category Name</ItemCaption>
+                  </Item>
+                  <Item>
+                    <ID xsi:type="Measure">
+                      <MeasureName>Amount</MeasureName>
+                      <UniqueName>[Measures].[Amount]</UniqueName>
+                    </ID>
+                    <ItemCaption>Amount</ItemCaption>
+                    <FormattedValue>true</FormattedValue>
+                  </Item>
+                  <Item>
+                    <ID xsi:type="Measure">
+                      <MeasureName>Facts Count</MeasureName>
+                      <UniqueName>[Measures].[Facts Count]</UniqueName>
+                    </ID>
+                    <ItemCaption>Facts Count</ItemCaption>
+                    <FormattedValue>true</FormattedValue>
+                  </Item>
+                  <Item>
+                    <ID xsi:type="Measure">
+                      <MeasureName>Rent Days</MeasureName>
+                      <UniqueName>[Measures].[Rent Days]</UniqueName>
+                    </ID>
+                    <ItemCaption>Rent Days</ItemCaption>
+                    <FormattedValue>true</FormattedValue>
+                  </Item>
+                  <Item>
+                    <ID xsi:type="Measure">
+                      <MeasureName>Avg 3M Amount</MeasureName>
+                      <UniqueName>[Measures].[Avg 3M Amount]</UniqueName>
+                    </ID>
+                    <ItemCaption>Avg 3M Amount</ItemCaption>
+                    <FormattedValue>true</FormattedValue>
+                  </Item>
+                  <Item>
+                    <ID xsi:type="Measure">
+                      <MeasureName>Avg 3M Facts Count</MeasureName>
+                      <UniqueName>[Measures].[Avg 3M Facts Count]</UniqueName>
+                    </ID>
+                    <ItemCaption>Avg 3M Facts Count</ItemCaption>
+                    <FormattedValue>true</FormattedValue>
+                  </Item>
+                  <Item>
+                    <ID xsi:type="Measure">
+                      <MeasureName>Avg 3M Rent Days</MeasureName>
+                      <UniqueName>[Measures].[Avg 3M Rent Days]</UniqueName>
+                    </ID>
+                    <ItemCaption>Avg 3M Rent Days</ItemCaption>
+                    <FormattedValue>true</FormattedValue>
+                  </Item>
+                </Items>
               </Select>
               <AutoExecute>false</AutoExecute>
               <From>Sakila_DWH</From>
@@ -426,16 +520,26 @@ FROM [Sakila_DWH] </CommandText>
               <QueryProperties />
             </QuerySpecification>
             <Query>
-              <Statement>WITH MEMBER [Measures].[Avg Rent Days] AS round([Measures].[Rent Days]/[Measures].[Rent Days Count], 2) SELECT NON EMPTY { [Measures].[Amount], [Measures].[Facts Count], [Measures].[Rent Days], [Measures].[Avg Rent Days] } ON COLUMNS, 
-NON EMPTY { (strtoset(@city) * strtoset (@employee) * strtoset (@original_language) * strtoset (@translation_language) * strtoset (@date) ) } ON ROWS 
-FROM [Sakila_DWH] </Statement>
+              <Statement>WITH
+MEMBER [Measures].[Avg 3M Amount] AS round(Avg([Dim Date].[Calendar].prevmember.firstchild:[Dim Date].[Calendar].nextmember.lastchild, [Measures].[Amount]), 2)
+
+MEMBER [Measures].[Avg 3M Facts Count] AS round (Avg([Dim Date].[Calendar].prevmember.firstchild:[Dim Date].[Calendar].nextmember.lastchild, [Measures].[Facts Count]), 2)
+
+MEMBER [Measures].[Avg 3M Rent Days] AS round (Sum ([Dim Date].[Calendar].prevmember.firstchild:[Dim Date].[Calendar].nextmember.lastchild, [Measures].[Rent Days])/Sum ([Dim Date].[Calendar].prevmember.firstchild:[Dim Date].[Calendar].nextmember.lastchild, [Measures].[Rent Days Count]), 2)
+
+SELECT 
+ { [Measures].[Amount], [Measures].[Facts Count], [Measures].[Rent Days], [Measures].[Avg 3M Amount], [Measures].[Avg 3M Facts Count], [Measures].[Avg 3M Rent Days] } ON COLUMNS, 
+
+ { (strtomember (@start_month):strtomember (@end_month)) * strtoset (@city_name)  * strtoset (@employee)  * strtoset (@original_language)  * strtoset (@translation_language)  * strtoset (@category_name)  }  ON ROWS 
+FROM [Sakila_DWH]
+</Statement>
               <ParameterDefinitions>
                 <ParameterDefinition>
-                  <Name>city</Name>
+                  <Name>city_name</Name>
                   <DefaultValues>
                     <DefaultValue>[Dim Geography].[City Name].[All]</DefaultValue>
                   </DefaultValues>
-                  <Caption>city</Caption>
+                  <Caption>city_name</Caption>
                   <HierarchyUniqueName>[Dim Geography].[City Name]</HierarchyUniqueName>
                   <ParameterValuesQuery>
                     <Statement>WITH MEMBER [Measures].[ParameterCaption] AS [Dim Geography].[City Name].CURRENTMEMBER.MEMBER_CAPTION MEMBER [Measures].[ParameterValue] AS [Dim Geography].[City Name].CURRENTMEMBER.UNIQUENAME MEMBER [Measures].[ParameterLevel] AS [Dim Geography].[City Name].CURRENTMEMBER.LEVEL.ORDINAL SELECT {[Measures].[ParameterCaption], [Measures].[ParameterValue], [Measures].[ParameterLevel]} ON COLUMNS , [Dim Geography].[City Name].ALLMEMBERS ON ROWS FROM [Sakila_DWH]</Statement>
@@ -491,14 +595,42 @@ FROM [Sakila_DWH] </Statement>
                   <MultipleValues>true</MultipleValues>
                 </ParameterDefinition>
                 <ParameterDefinition>
-                  <Name>date</Name>
+                  <Name>start_month</Name>
                   <DefaultValues>
                     <DefaultValue>[Dim Date].[Calendar].[Month Number Of Year].&amp;[1]&amp;[2005]</DefaultValue>
                   </DefaultValues>
-                  <Caption>date</Caption>
+                  <Caption>start_month</Caption>
                   <HierarchyUniqueName>[Dim Date].[Calendar]</HierarchyUniqueName>
                   <ParameterValuesQuery>
                     <Statement>WITH MEMBER [Measures].[ParameterCaption] AS [Dim Date].[Calendar].CURRENTMEMBER.MEMBER_CAPTION MEMBER [Measures].[ParameterValue] AS [Dim Date].[Calendar].CURRENTMEMBER.UNIQUENAME MEMBER [Measures].[ParameterLevel] AS [Dim Date].[Calendar].CURRENTMEMBER.LEVEL.ORDINAL SELECT {[Measures].[ParameterCaption], [Measures].[ParameterValue], [Measures].[ParameterLevel]} ON COLUMNS , [Dim Date].[Calendar].ALLMEMBERS ON ROWS FROM [Sakila_DWH]</Statement>
+                    <ParameterizedStatement>
+                      <ReferencedParameters />
+                    </ParameterizedStatement>
+                  </ParameterValuesQuery>
+                </ParameterDefinition>
+                <ParameterDefinition>
+                  <Name>end_month</Name>
+                  <DefaultValues>
+                    <DefaultValue>[Dim Date].[Calendar].[Month Number Of Year].&amp;[12]&amp;[2018]</DefaultValue>
+                  </DefaultValues>
+                  <Caption>end_month</Caption>
+                  <HierarchyUniqueName>[Dim Date].[Calendar]</HierarchyUniqueName>
+                  <ParameterValuesQuery>
+                    <Statement>WITH MEMBER [Measures].[ParameterCaption] AS [Dim Date].[Calendar].CURRENTMEMBER.MEMBER_CAPTION MEMBER [Measures].[ParameterValue] AS [Dim Date].[Calendar].CURRENTMEMBER.UNIQUENAME MEMBER [Measures].[ParameterLevel] AS [Dim Date].[Calendar].CURRENTMEMBER.LEVEL.ORDINAL SELECT {[Measures].[ParameterCaption], [Measures].[ParameterValue], [Measures].[ParameterLevel]} ON COLUMNS , [Dim Date].[Calendar].ALLMEMBERS ON ROWS FROM [Sakila_DWH]</Statement>
+                    <ParameterizedStatement>
+                      <ReferencedParameters />
+                    </ParameterizedStatement>
+                  </ParameterValuesQuery>
+                </ParameterDefinition>
+                <ParameterDefinition>
+                  <Name>category_name</Name>
+                  <DefaultValues>
+                    <DefaultValue>[Dim Category].[Category Name].&amp;[Action]</DefaultValue>
+                  </DefaultValues>
+                  <Caption>category_name</Caption>
+                  <HierarchyUniqueName>[Dim Category].[Category Name]</HierarchyUniqueName>
+                  <ParameterValuesQuery>
+                    <Statement>WITH MEMBER [Measures].[ParameterCaption] AS [Dim Category].[Category Name].CURRENTMEMBER.MEMBER_CAPTION MEMBER [Measures].[ParameterValue] AS [Dim Category].[Category Name].CURRENTMEMBER.UNIQUENAME MEMBER [Measures].[ParameterLevel] AS [Dim Category].[Category Name].CURRENTMEMBER.LEVEL.ORDINAL SELECT {[Measures].[ParameterCaption], [Measures].[ParameterValue], [Measures].[ParameterLevel]} ON COLUMNS , [Dim Category].[Category Name].ALLMEMBERS ON ROWS FROM [Sakila_DWH]</Statement>
                     <ParameterizedStatement>
                       <ReferencedParameters />
                     </ParameterizedStatement>
@@ -510,20 +642,49 @@ FROM [Sakila_DWH] </Statement>
           </QueryDefinition>
         </rd:DesignerState>
       </Query>
+      <Fields>
+        <Field Name="Calendar_Year">
+          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Level" UniqueName="[Dim Date].[Calendar].[Calendar Year]" /&gt;</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Month_Number_Of_Year">
+          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Level" UniqueName="[Dim Date].[Calendar].[Month Number Of Year]" /&gt;</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Category_Name">
+          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Level" UniqueName="[Dim Category].[Category Name].[Category Name]" /&gt;</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Amount">
+          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Measure" UniqueName="[Measures].[Amount]" /&gt;</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Facts_Count">
+          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Measure" UniqueName="[Measures].[Facts Count]" /&gt;</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Rent_Days">
+          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Measure" UniqueName="[Measures].[Rent Days]" /&gt;</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Avg_3M_Amount">
+          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Measure" UniqueName="[Measures].[Avg 3M Amount]" /&gt;</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Avg_3M_Facts_Count">
+          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Measure" UniqueName="[Measures].[Avg 3M Facts Count]" /&gt;</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Avg_3M_Rent_Days">
+          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Measure" UniqueName="[Measures].[Avg 3M Rent Days]" /&gt;</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+      </Fields>
     </DataSet>
-    <DataSet Name="FirstWeek2">
+    <DataSet Name="city_name">
       <Query>
         <DataSourceName>Sekila_cube</DataSourceName>
-        <CommandText>WITH
-MEMBER [Measures].[First Week Amount] AS
-    ( ([Dim Date].[Calendar_weeks].CurrentMember.firstchild), [Measures].[Amount])
-MEMBER [Measures].[First Week Facts Count] AS
-    ( ([Dim Date].[Calendar_weeks].CurrentMember.firstchild), [Measures].[Facts Count])
-SELECT
- NON EMPTY   {([Measures].[First Week Amount]),  ([Measures].[Amount]),
-        ([Measures].[First Week Facts Count]), ( [Measures].[Facts Count])  } ON COLUMNS,
- NON EMPTY   {[Dim Date].[Calendar_weeks].[Month Number Of Year].Members} ON ROWS
-FROM [Sakila_DWH]</CommandText>
+        <CommandText>WITH MEMBER [Measures].[ParameterCaption] AS [Dim Geography].[City Name].CURRENTMEMBER.MEMBER_CAPTION MEMBER [Measures].[ParameterValue] AS [Dim Geography].[City Name].CURRENTMEMBER.UNIQUENAME MEMBER [Measures].[ParameterLevel] AS [Dim Geography].[City Name].CURRENTMEMBER.LEVEL.ORDINAL SELECT {[Measures].[ParameterCaption], [Measures].[ParameterValue], [Measures].[ParameterLevel]} ON COLUMNS , [Dim Geography].[City Name].ALLMEMBERS ON ROWS FROM [Sakila_DWH]</CommandText>
         <rd:DesignerState>
           <QueryDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.microsoft.com/AnalysisServices/QueryDefinition">
             <CommandType>MDX</CommandType>
@@ -532,55 +693,27 @@ FROM [Sakila_DWH]</CommandText>
               <Select>
                 <Items>
                   <Item>
-                    <ID xsi:type="Level">
-                      <DimensionName>Dim Date</DimensionName>
-                      <HierarchyName>Calendar_weeks</HierarchyName>
-                      <HierarchyUniqueName>[Dim Date].[Calendar_weeks]</HierarchyUniqueName>
-                      <LevelName>Calendar Year</LevelName>
-                      <UniqueName>[Dim Date].[Calendar_weeks].[Calendar Year]</UniqueName>
-                    </ID>
-                    <ItemCaption>Calendar Year</ItemCaption>
-                  </Item>
-                  <Item>
-                    <ID xsi:type="Level">
-                      <DimensionName>Dim Date</DimensionName>
-                      <HierarchyName>Calendar_weeks</HierarchyName>
-                      <HierarchyUniqueName>[Dim Date].[Calendar_weeks]</HierarchyUniqueName>
-                      <LevelName>Month Number Of Year</LevelName>
-                      <UniqueName>[Dim Date].[Calendar_weeks].[Month Number Of Year]</UniqueName>
-                    </ID>
-                    <ItemCaption>Month Number Of Year</ItemCaption>
-                  </Item>
-                  <Item>
                     <ID xsi:type="Measure">
-                      <MeasureName>First Week Amount</MeasureName>
-                      <UniqueName>[Measures].[First Week Amount]</UniqueName>
+                      <MeasureName>ParameterCaption</MeasureName>
+                      <UniqueName>[Measures].[ParameterCaption]</UniqueName>
                     </ID>
-                    <ItemCaption>First Week Amount</ItemCaption>
+                    <ItemCaption>ParameterCaption</ItemCaption>
                     <FormattedValue>true</FormattedValue>
                   </Item>
                   <Item>
                     <ID xsi:type="Measure">
-                      <MeasureName>Amount</MeasureName>
-                      <UniqueName>[Measures].[Amount]</UniqueName>
+                      <MeasureName>ParameterValue</MeasureName>
+                      <UniqueName>[Measures].[ParameterValue]</UniqueName>
                     </ID>
-                    <ItemCaption>Amount</ItemCaption>
+                    <ItemCaption>ParameterValue</ItemCaption>
                     <FormattedValue>true</FormattedValue>
                   </Item>
                   <Item>
                     <ID xsi:type="Measure">
-                      <MeasureName>First Week Facts Count</MeasureName>
-                      <UniqueName>[Measures].[First Week Facts Count]</UniqueName>
+                      <MeasureName>ParameterLevel</MeasureName>
+                      <UniqueName>[Measures].[ParameterLevel]</UniqueName>
                     </ID>
-                    <ItemCaption>First Week Facts Count</ItemCaption>
-                    <FormattedValue>true</FormattedValue>
-                  </Item>
-                  <Item>
-                    <ID xsi:type="Measure">
-                      <MeasureName>Facts Count</MeasureName>
-                      <UniqueName>[Measures].[Facts Count]</UniqueName>
-                    </ID>
-                    <ItemCaption>Facts Count</ItemCaption>
+                    <ItemCaption>ParameterLevel</ItemCaption>
                     <FormattedValue>true</FormattedValue>
                   </Item>
                 </Items>
@@ -595,45 +728,252 @@ FROM [Sakila_DWH]</CommandText>
               <QueryProperties />
             </QuerySpecification>
             <Query>
-              <Statement>WITH
-MEMBER [Measures].[First Week Amount] AS
-    ( ([Dim Date].[Calendar_weeks].CurrentMember.firstchild), [Measures].[Amount])
-MEMBER [Measures].[First Week Facts Count] AS
-    ( ([Dim Date].[Calendar_weeks].CurrentMember.firstchild), [Measures].[Facts Count])
-SELECT
- NON EMPTY   {([Measures].[First Week Amount]),  ([Measures].[Amount]),
-        ([Measures].[First Week Facts Count]), ( [Measures].[Facts Count])  } ON COLUMNS,
- NON EMPTY   {[Dim Date].[Calendar_weeks].[Month Number Of Year].Members} ON ROWS
-FROM [Sakila_DWH]</Statement>
+              <Statement>WITH MEMBER [Measures].[ParameterCaption] AS [Dim Geography].[City Name].CURRENTMEMBER.MEMBER_CAPTION MEMBER [Measures].[ParameterValue] AS [Dim Geography].[City Name].CURRENTMEMBER.UNIQUENAME MEMBER [Measures].[ParameterLevel] AS [Dim Geography].[City Name].CURRENTMEMBER.LEVEL.ORDINAL SELECT {[Measures].[ParameterCaption], [Measures].[ParameterValue], [Measures].[ParameterLevel]} ON COLUMNS , [Dim Geography].[City Name].ALLMEMBERS ON ROWS FROM [Sakila_DWH]</Statement>
               <ParameterDefinitions />
             </Query>
           </QueryDefinition>
         </rd:DesignerState>
+        <rd:AutoGenerated>true</rd:AutoGenerated>
+        <rd:Hidden>true</rd:Hidden>
       </Query>
       <Fields>
-        <Field Name="Calendar_Year">
-          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Level" UniqueName="[Dim Date].[Calendar_weeks].[Calendar Year]" /&gt;</DataField>
+        <Field Name="ParameterCaption">
+          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Measure" UniqueName="[Measures].[ParameterCaption]" /&gt;</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="ParameterValue">
+          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Measure" UniqueName="[Measures].[ParameterValue]" /&gt;</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="ParameterLevel">
+          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Measure" UniqueName="[Measures].[ParameterLevel]" /&gt;</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="ParameterCaptionIndented">
+          <Value>=Space(3*Fields!ParameterLevel.Value) + Fields!ParameterCaption.Value</Value>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="Month_Number_Of_Year">
-          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Level" UniqueName="[Dim Date].[Calendar_weeks].[Month Number Of Year]" /&gt;</DataField>
+      </Fields>
+    </DataSet>
+    <DataSet Name="start_month">
+      <Query>
+        <DataSourceName>Sekila_cube</DataSourceName>
+        <CommandText>WITH MEMBER [Measures].[ParameterCaption] AS [Dim Date].[Calendar].CURRENTMEMBER.MEMBER_CAPTION MEMBER [Measures].[ParameterValue] AS [Dim Date].[Calendar].CURRENTMEMBER.UNIQUENAME MEMBER [Measures].[ParameterLevel] AS [Dim Date].[Calendar].CURRENTMEMBER.LEVEL.ORDINAL SELECT {[Measures].[ParameterCaption], [Measures].[ParameterValue], [Measures].[ParameterLevel]} ON COLUMNS , [Dim Date].[Calendar].ALLMEMBERS ON ROWS FROM [Sakila_DWH]</CommandText>
+        <rd:DesignerState>
+          <QueryDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.microsoft.com/AnalysisServices/QueryDefinition">
+            <CommandType>MDX</CommandType>
+            <Type>Query</Type>
+            <QuerySpecification xsi:type="MDXQuerySpecification">
+              <Select>
+                <Items>
+                  <Item>
+                    <ID xsi:type="Measure">
+                      <MeasureName>ParameterCaption</MeasureName>
+                      <UniqueName>[Measures].[ParameterCaption]</UniqueName>
+                    </ID>
+                    <ItemCaption>ParameterCaption</ItemCaption>
+                    <FormattedValue>true</FormattedValue>
+                  </Item>
+                  <Item>
+                    <ID xsi:type="Measure">
+                      <MeasureName>ParameterValue</MeasureName>
+                      <UniqueName>[Measures].[ParameterValue]</UniqueName>
+                    </ID>
+                    <ItemCaption>ParameterValue</ItemCaption>
+                    <FormattedValue>true</FormattedValue>
+                  </Item>
+                  <Item>
+                    <ID xsi:type="Measure">
+                      <MeasureName>ParameterLevel</MeasureName>
+                      <UniqueName>[Measures].[ParameterLevel]</UniqueName>
+                    </ID>
+                    <ItemCaption>ParameterLevel</ItemCaption>
+                    <FormattedValue>true</FormattedValue>
+                  </Item>
+                </Items>
+              </Select>
+              <AutoExecute>false</AutoExecute>
+              <From>Sakila_DWH</From>
+              <Filter>
+                <FilterItems />
+              </Filter>
+              <Calculations />
+              <Aggregates />
+              <QueryProperties />
+            </QuerySpecification>
+            <Query>
+              <Statement>WITH MEMBER [Measures].[ParameterCaption] AS [Dim Date].[Calendar].CURRENTMEMBER.MEMBER_CAPTION MEMBER [Measures].[ParameterValue] AS [Dim Date].[Calendar].CURRENTMEMBER.UNIQUENAME MEMBER [Measures].[ParameterLevel] AS [Dim Date].[Calendar].CURRENTMEMBER.LEVEL.ORDINAL SELECT {[Measures].[ParameterCaption], [Measures].[ParameterValue], [Measures].[ParameterLevel]} ON COLUMNS , [Dim Date].[Calendar].ALLMEMBERS ON ROWS FROM [Sakila_DWH]</Statement>
+              <ParameterDefinitions />
+            </Query>
+          </QueryDefinition>
+        </rd:DesignerState>
+        <rd:AutoGenerated>true</rd:AutoGenerated>
+        <rd:Hidden>true</rd:Hidden>
+      </Query>
+      <Fields>
+        <Field Name="ParameterCaption">
+          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Measure" UniqueName="[Measures].[ParameterCaption]" /&gt;</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="ParameterValue">
+          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Measure" UniqueName="[Measures].[ParameterValue]" /&gt;</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="ParameterLevel">
+          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Measure" UniqueName="[Measures].[ParameterLevel]" /&gt;</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="ParameterCaptionIndented">
+          <Value>=Space(3*Fields!ParameterLevel.Value) + Fields!ParameterCaption.Value</Value>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="First_Week_Amount">
-          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Measure" UniqueName="[Measures].[First Week Amount]" /&gt;</DataField>
+      </Fields>
+    </DataSet>
+    <DataSet Name="end_month">
+      <Query>
+        <DataSourceName>Sekila_cube</DataSourceName>
+        <CommandText>WITH MEMBER [Measures].[ParameterCaption] AS [Dim Date].[Calendar].CURRENTMEMBER.MEMBER_CAPTION MEMBER [Measures].[ParameterValue] AS [Dim Date].[Calendar].CURRENTMEMBER.UNIQUENAME MEMBER [Measures].[ParameterLevel] AS [Dim Date].[Calendar].CURRENTMEMBER.LEVEL.ORDINAL SELECT {[Measures].[ParameterCaption], [Measures].[ParameterValue], [Measures].[ParameterLevel]} ON COLUMNS , [Dim Date].[Calendar].ALLMEMBERS ON ROWS FROM [Sakila_DWH]</CommandText>
+        <rd:DesignerState>
+          <QueryDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.microsoft.com/AnalysisServices/QueryDefinition">
+            <CommandType>MDX</CommandType>
+            <Type>Query</Type>
+            <QuerySpecification xsi:type="MDXQuerySpecification">
+              <Select>
+                <Items>
+                  <Item>
+                    <ID xsi:type="Measure">
+                      <MeasureName>ParameterCaption</MeasureName>
+                      <UniqueName>[Measures].[ParameterCaption]</UniqueName>
+                    </ID>
+                    <ItemCaption>ParameterCaption</ItemCaption>
+                    <FormattedValue>true</FormattedValue>
+                  </Item>
+                  <Item>
+                    <ID xsi:type="Measure">
+                      <MeasureName>ParameterValue</MeasureName>
+                      <UniqueName>[Measures].[ParameterValue]</UniqueName>
+                    </ID>
+                    <ItemCaption>ParameterValue</ItemCaption>
+                    <FormattedValue>true</FormattedValue>
+                  </Item>
+                  <Item>
+                    <ID xsi:type="Measure">
+                      <MeasureName>ParameterLevel</MeasureName>
+                      <UniqueName>[Measures].[ParameterLevel]</UniqueName>
+                    </ID>
+                    <ItemCaption>ParameterLevel</ItemCaption>
+                    <FormattedValue>true</FormattedValue>
+                  </Item>
+                </Items>
+              </Select>
+              <AutoExecute>false</AutoExecute>
+              <From>Sakila_DWH</From>
+              <Filter>
+                <FilterItems />
+              </Filter>
+              <Calculations />
+              <Aggregates />
+              <QueryProperties />
+            </QuerySpecification>
+            <Query>
+              <Statement>WITH MEMBER [Measures].[ParameterCaption] AS [Dim Date].[Calendar].CURRENTMEMBER.MEMBER_CAPTION MEMBER [Measures].[ParameterValue] AS [Dim Date].[Calendar].CURRENTMEMBER.UNIQUENAME MEMBER [Measures].[ParameterLevel] AS [Dim Date].[Calendar].CURRENTMEMBER.LEVEL.ORDINAL SELECT {[Measures].[ParameterCaption], [Measures].[ParameterValue], [Measures].[ParameterLevel]} ON COLUMNS , [Dim Date].[Calendar].ALLMEMBERS ON ROWS FROM [Sakila_DWH]</Statement>
+              <ParameterDefinitions />
+            </Query>
+          </QueryDefinition>
+        </rd:DesignerState>
+        <rd:AutoGenerated>true</rd:AutoGenerated>
+        <rd:Hidden>true</rd:Hidden>
+      </Query>
+      <Fields>
+        <Field Name="ParameterCaption">
+          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Measure" UniqueName="[Measures].[ParameterCaption]" /&gt;</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
-        <Field Name="Amount">
-          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Measure" UniqueName="[Measures].[Amount]" /&gt;</DataField>
+        <Field Name="ParameterValue">
+          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Measure" UniqueName="[Measures].[ParameterValue]" /&gt;</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
-        <Field Name="First_Week_Facts_Count">
-          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Measure" UniqueName="[Measures].[First Week Facts Count]" /&gt;</DataField>
+        <Field Name="ParameterLevel">
+          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Measure" UniqueName="[Measures].[ParameterLevel]" /&gt;</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
-        <Field Name="Facts_Count">
-          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Measure" UniqueName="[Measures].[Facts Count]" /&gt;</DataField>
+        <Field Name="ParameterCaptionIndented">
+          <Value>=Space(3*Fields!ParameterLevel.Value) + Fields!ParameterCaption.Value</Value>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="category_name">
+      <Query>
+        <DataSourceName>Sekila_cube</DataSourceName>
+        <CommandText>WITH MEMBER [Measures].[ParameterCaption] AS [Dim Category].[Category Name].CURRENTMEMBER.MEMBER_CAPTION MEMBER [Measures].[ParameterValue] AS [Dim Category].[Category Name].CURRENTMEMBER.UNIQUENAME MEMBER [Measures].[ParameterLevel] AS [Dim Category].[Category Name].CURRENTMEMBER.LEVEL.ORDINAL SELECT {[Measures].[ParameterCaption], [Measures].[ParameterValue], [Measures].[ParameterLevel]} ON COLUMNS , [Dim Category].[Category Name].ALLMEMBERS ON ROWS FROM [Sakila_DWH]</CommandText>
+        <rd:DesignerState>
+          <QueryDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.microsoft.com/AnalysisServices/QueryDefinition">
+            <CommandType>MDX</CommandType>
+            <Type>Query</Type>
+            <QuerySpecification xsi:type="MDXQuerySpecification">
+              <Select>
+                <Items>
+                  <Item>
+                    <ID xsi:type="Measure">
+                      <MeasureName>ParameterCaption</MeasureName>
+                      <UniqueName>[Measures].[ParameterCaption]</UniqueName>
+                    </ID>
+                    <ItemCaption>ParameterCaption</ItemCaption>
+                    <FormattedValue>true</FormattedValue>
+                  </Item>
+                  <Item>
+                    <ID xsi:type="Measure">
+                      <MeasureName>ParameterValue</MeasureName>
+                      <UniqueName>[Measures].[ParameterValue]</UniqueName>
+                    </ID>
+                    <ItemCaption>ParameterValue</ItemCaption>
+                    <FormattedValue>true</FormattedValue>
+                  </Item>
+                  <Item>
+                    <ID xsi:type="Measure">
+                      <MeasureName>ParameterLevel</MeasureName>
+                      <UniqueName>[Measures].[ParameterLevel]</UniqueName>
+                    </ID>
+                    <ItemCaption>ParameterLevel</ItemCaption>
+                    <FormattedValue>true</FormattedValue>
+                  </Item>
+                </Items>
+              </Select>
+              <AutoExecute>false</AutoExecute>
+              <From>Sakila_DWH</From>
+              <Filter>
+                <FilterItems />
+              </Filter>
+              <Calculations />
+              <Aggregates />
+              <QueryProperties />
+            </QuerySpecification>
+            <Query>
+              <Statement>WITH MEMBER [Measures].[ParameterCaption] AS [Dim Category].[Category Name].CURRENTMEMBER.MEMBER_CAPTION MEMBER [Measures].[ParameterValue] AS [Dim Category].[Category Name].CURRENTMEMBER.UNIQUENAME MEMBER [Measures].[ParameterLevel] AS [Dim Category].[Category Name].CURRENTMEMBER.LEVEL.ORDINAL SELECT {[Measures].[ParameterCaption], [Measures].[ParameterValue], [Measures].[ParameterLevel]} ON COLUMNS , [Dim Category].[Category Name].ALLMEMBERS ON ROWS FROM [Sakila_DWH]</Statement>
+              <ParameterDefinitions />
+            </Query>
+          </QueryDefinition>
+        </rd:DesignerState>
+        <rd:AutoGenerated>true</rd:AutoGenerated>
+        <rd:Hidden>true</rd:Hidden>
+      </Query>
+      <Fields>
+        <Field Name="ParameterCaption">
+          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Measure" UniqueName="[Measures].[ParameterCaption]" /&gt;</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="ParameterValue">
+          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Measure" UniqueName="[Measures].[ParameterValue]" /&gt;</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="ParameterLevel">
+          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Measure" UniqueName="[Measures].[ParameterLevel]" /&gt;</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="ParameterCaptionIndented">
+          <Value>=Space(3*Fields!ParameterLevel.Value) + Fields!ParameterCaption.Value</Value>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
     </DataSet>
@@ -743,11 +1083,77 @@ FROM [Sakila_DWH]</Statement>
       </ValidValues>
       <MultiValue>true</MultiValue>
     </ReportParameter>
+    <ReportParameter Name="city_name">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>[Dim Geography].[City Name].[All]</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>city_name</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>city_name</DataSetName>
+          <ValueField>ParameterValue</ValueField>
+          <LabelField>ParameterCaptionIndented</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="start_month">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>[Dim Date].[Calendar].[Month Number Of Year].&amp;[1]&amp;[2005]</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>start_month</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>start_month</DataSetName>
+          <ValueField>ParameterValue</ValueField>
+          <LabelField>ParameterCaptionIndented</LabelField>
+        </DataSetReference>
+      </ValidValues>
+    </ReportParameter>
+    <ReportParameter Name="end_month">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>[Dim Date].[Calendar].[Month Number Of Year].&amp;[12]&amp;[2018]</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>end_month</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>end_month</DataSetName>
+          <ValueField>ParameterValue</ValueField>
+          <LabelField>ParameterCaptionIndented</LabelField>
+        </DataSetReference>
+      </ValidValues>
+    </ReportParameter>
+    <ReportParameter Name="category_name">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>[Dim Category].[Category Name].&amp;[Action]</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>category_name</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>category_name</DataSetName>
+          <ValueField>ParameterValue</ValueField>
+          <LabelField>ParameterCaptionIndented</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
   </ReportParameters>
   <ReportParametersLayout>
     <GridLayoutDefinition>
       <NumberOfColumns>4</NumberOfColumns>
-      <NumberOfRows>2</NumberOfRows>
+      <NumberOfRows>3</NumberOfRows>
       <CellDefinitions>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
@@ -773,6 +1179,26 @@ FROM [Sakila_DWH]</Statement>
           <ColumnIndex>0</ColumnIndex>
           <RowIndex>1</RowIndex>
           <ParameterName>date</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>1</RowIndex>
+          <ParameterName>city_name</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>2</ColumnIndex>
+          <RowIndex>1</RowIndex>
+          <ParameterName>start_month</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>3</ColumnIndex>
+          <RowIndex>1</RowIndex>
+          <ParameterName>end_month</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>0</ColumnIndex>
+          <RowIndex>2</RowIndex>
+          <ParameterName>category_name</ParameterName>
         </CellDefinition>
       </CellDefinitions>
     </GridLayoutDefinition>
