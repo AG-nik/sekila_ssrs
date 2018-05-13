@@ -260,7 +260,7 @@ FROM [Sakila_DWH]
                       </ChartDataPointValues>
                       <ChartDataLabel>
                         <Style>
-                          <Format>'$'0.00;('$'0.00)</Format>
+                          <Format>'$'0;('$'0)</Format>
                           <rd:FormatSymbolCulture>en-US</rd:FormatSymbolCulture>
                         </Style>
                         <UseValueAsLabel>true</UseValueAsLabel>
