@@ -20,7 +20,7 @@
         <DataSourceName>Sekila_cube</DataSourceName>
         <QueryParameters>
           <QueryParameter Name="category_name">
-            <Value>=Parameters!category_name.Value</Value>
+            <Value>="[Dim Category].[Category Name].[Category Name].&amp;[" + Parameters!category_name.Value + "]"</Value>
           </QueryParameter>
         </QueryParameters>
         <CommandText> SELECT NON EMPTY { [Measures].[Facts Count], [Measures].[Amount] } ON COLUMNS, 
@@ -137,40 +137,82 @@ NON EMPTY { ([Dim Film].[Film Id].[Film Id].ALLMEMBERS * [Dim Film].[Title].[Tit
         </Field>
       </Fields>
     </DataSet>
-    <DataSet Name="category_name">
+    <DataSet Name="Categories">
+      <Query>
+        <DataSourceName>Sekila_DWH</DataSourceName>
+        <CommandText>SELECT        category_name
+FROM            dimCategory</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="category_name">
+          <DataField>category_name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="DataSet_full">
       <Query>
         <DataSourceName>Sekila_cube</DataSourceName>
-        <CommandText>WITH MEMBER [Measures].[ParameterCaption] AS [Dim Category].[Category Name].CURRENTMEMBER.MEMBER_CAPTION MEMBER [Measures].[ParameterValue] AS [Dim Category].[Category Name].CURRENTMEMBER.UNIQUENAME MEMBER [Measures].[ParameterLevel] AS [Dim Category].[Category Name].CURRENTMEMBER.LEVEL.ORDINAL SELECT {[Measures].[ParameterCaption], [Measures].[ParameterValue], [Measures].[ParameterLevel]} ON COLUMNS , [Dim Category].[Category Name].ALLMEMBERS ON ROWS FROM [Sakila_DWH]</CommandText>
+        <CommandText> SELECT NON EMPTY { [Measures].[Amount], [Measures].[Facts Count] } ON COLUMNS, NON EMPTY { ([Dim Film].[Film Id].[Film Id].ALLMEMBERS * [Dim Film].[Title].[Title].ALLMEMBERS ) } DIMENSION PROPERTIES MEMBER_CAPTION, MEMBER_VALUE, MEMBER_UNIQUE_NAME ON ROWS FROM [Sakila_DWH] CELL PROPERTIES VALUE, BACK_COLOR, FORE_COLOR, FORMATTED_VALUE, FORMAT_STRING, FONT_NAME, FONT_SIZE, FONT_FLAGS</CommandText>
         <rd:DesignerState>
           <QueryDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.microsoft.com/AnalysisServices/QueryDefinition">
             <CommandType>MDX</CommandType>
-            <Type>Query</Type>
             <QuerySpecification xsi:type="MDXQuerySpecification">
               <Select>
                 <Items>
                   <Item>
-                    <ID xsi:type="Measure">
-                      <MeasureName>ParameterCaption</MeasureName>
-                      <UniqueName>[Measures].[ParameterCaption]</UniqueName>
+                    <ID xsi:type="Level">
+                      <DimensionName>Dim Film</DimensionName>
+                      <HierarchyName>Film Id</HierarchyName>
+                      <HierarchyUniqueName>[Dim Film].[Film Id]</HierarchyUniqueName>
+                      <LevelName>Film Id</LevelName>
+                      <UniqueName>[Dim Film].[Film Id].[Film Id]</UniqueName>
                     </ID>
-                    <ItemCaption>ParameterCaption</ItemCaption>
-                    <FormattedValue>true</FormattedValue>
+                    <ItemCaption>Film Id</ItemCaption>
+                    <UniqueName>true</UniqueName>
+                  </Item>
+                  <Item>
+                    <ID xsi:type="Level">
+                      <DimensionName>Dim Film</DimensionName>
+                      <HierarchyName>Title</HierarchyName>
+                      <HierarchyUniqueName>[Dim Film].[Title]</HierarchyUniqueName>
+                      <LevelName>Title</LevelName>
+                      <UniqueName>[Dim Film].[Title].[Title]</UniqueName>
+                    </ID>
+                    <ItemCaption>Title</ItemCaption>
+                    <UniqueName>true</UniqueName>
                   </Item>
                   <Item>
                     <ID xsi:type="Measure">
-                      <MeasureName>ParameterValue</MeasureName>
-                      <UniqueName>[Measures].[ParameterValue]</UniqueName>
+                      <MeasureName>Amount</MeasureName>
+                      <UniqueName>[Measures].[Amount]</UniqueName>
                     </ID>
-                    <ItemCaption>ParameterValue</ItemCaption>
+                    <ItemCaption>Amount</ItemCaption>
+                    <BackColor>true</BackColor>
+                    <ForeColor>true</ForeColor>
+                    <FontFamily>true</FontFamily>
+                    <FontSize>true</FontSize>
+                    <FontWeight>true</FontWeight>
+                    <FontStyle>true</FontStyle>
+                    <FontDecoration>true</FontDecoration>
                     <FormattedValue>true</FormattedValue>
+                    <FormatString>true</FormatString>
                   </Item>
                   <Item>
                     <ID xsi:type="Measure">
-                      <MeasureName>ParameterLevel</MeasureName>
-                      <UniqueName>[Measures].[ParameterLevel]</UniqueName>
+                      <MeasureName>Facts Count</MeasureName>
+                      <UniqueName>[Measures].[Facts Count]</UniqueName>
                     </ID>
-                    <ItemCaption>ParameterLevel</ItemCaption>
+                    <ItemCaption>Facts Count</ItemCaption>
+                    <BackColor>true</BackColor>
+                    <ForeColor>true</ForeColor>
+                    <FontFamily>true</FontFamily>
+                    <FontSize>true</FontSize>
+                    <FontWeight>true</FontWeight>
+                    <FontStyle>true</FontStyle>
+                    <FontDecoration>true</FontDecoration>
                     <FormattedValue>true</FormattedValue>
+                    <FormatString>true</FormatString>
                   </Item>
                 </Items>
               </Select>
@@ -181,33 +223,33 @@ NON EMPTY { ([Dim Film].[Film Id].[Film Id].ALLMEMBERS * [Dim Film].[Title].[Tit
               </Filter>
               <Calculations />
               <Aggregates />
-              <QueryProperties />
+              <QueryProperties>
+                <IncludeMemberValue>true</IncludeMemberValue>
+              </QueryProperties>
             </QuerySpecification>
             <Query>
-              <Statement>WITH MEMBER [Measures].[ParameterCaption] AS [Dim Category].[Category Name].CURRENTMEMBER.MEMBER_CAPTION MEMBER [Measures].[ParameterValue] AS [Dim Category].[Category Name].CURRENTMEMBER.UNIQUENAME MEMBER [Measures].[ParameterLevel] AS [Dim Category].[Category Name].CURRENTMEMBER.LEVEL.ORDINAL SELECT {[Measures].[ParameterCaption], [Measures].[ParameterValue], [Measures].[ParameterLevel]} ON COLUMNS , [Dim Category].[Category Name].ALLMEMBERS ON ROWS FROM [Sakila_DWH]</Statement>
+              <Statement> SELECT NON EMPTY { [Measures].[Amount], [Measures].[Facts Count] } ON COLUMNS, NON EMPTY { ([Dim Film].[Film Id].[Film Id].ALLMEMBERS * [Dim Film].[Title].[Title].ALLMEMBERS ) } DIMENSION PROPERTIES MEMBER_CAPTION, MEMBER_VALUE, MEMBER_UNIQUE_NAME ON ROWS FROM [Sakila_DWH] CELL PROPERTIES VALUE, BACK_COLOR, FORE_COLOR, FORMATTED_VALUE, FORMAT_STRING, FONT_NAME, FONT_SIZE, FONT_FLAGS</Statement>
               <ParameterDefinitions />
             </Query>
           </QueryDefinition>
         </rd:DesignerState>
-        <rd:AutoGenerated>true</rd:AutoGenerated>
-        <rd:Hidden>true</rd:Hidden>
       </Query>
       <Fields>
-        <Field Name="ParameterCaption">
-          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Measure" UniqueName="[Measures].[ParameterCaption]" /&gt;</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="ParameterValue">
-          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Measure" UniqueName="[Measures].[ParameterValue]" /&gt;</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="ParameterLevel">
-          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Measure" UniqueName="[Measures].[ParameterLevel]" /&gt;</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="ParameterCaptionIndented">
-          <Value>=Space(3*Fields!ParameterLevel.Value) + Fields!ParameterCaption.Value</Value>
+        <Field Name="Film_Id">
+          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Level" UniqueName="[Dim Film].[Film Id].[Film Id]" /&gt;</DataField>
           <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Title">
+          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Level" UniqueName="[Dim Film].[Title].[Title]" /&gt;</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Amount">
+          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Measure" UniqueName="[Measures].[Amount]" /&gt;</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Facts_Count">
+          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Measure" UniqueName="[Measures].[Facts Count]" /&gt;</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
       </Fields>
     </DataSet>
@@ -220,54 +262,19 @@ NON EMPTY { ([Dim Film].[Film Id].[Film Id].ALLMEMBERS * [Dim Film].[Title].[Tit
             <TablixBody>
               <TablixColumns>
                 <TablixColumn>
-                  <Width>1in</Width>
+                  <Width>3.4375in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1in</Width>
+                  <Width>1.27083in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1in</Width>
-                </TablixColumn>
-                <TablixColumn>
-                  <Width>1in</Width>
+                  <Width>1.23958in</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
                 <TablixRow>
-                  <Height>0.25in</Height>
+                  <Height>0.44792in</Height>
                   <TablixCells>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox10">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>Category Name</Value>
-                                  <Style>
-                                    <FontFamily>Arial</FontFamily>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style />
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox10</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
-                            </Border>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
                     <TablixCell>
                       <CellContents>
                         <Textbox Name="Textbox3">
@@ -277,11 +284,15 @@ NON EMPTY { ([Dim Film].[Film Id].[Film Id].ALLMEMBERS * [Dim Film].[Title].[Tit
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Title</Value>
-                                  <Style />
+                                  <Value>Product</Value>
+                                  <Style>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox3</rd:DefaultName>
@@ -290,6 +301,7 @@ NON EMPTY { ([Dim Film].[Film Id].[Film Id].ALLMEMBERS * [Dim Film].[Title].[Tit
                               <Color>LightGrey</Color>
                               <Style>Solid</Style>
                             </Border>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -307,11 +319,16 @@ NON EMPTY { ([Dim Film].[Film Id].[Film Id].ALLMEMBERS * [Dim Film].[Title].[Tit
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Facts Count</Value>
-                                  <Style />
+                                  <Value>Operations quantity</Value>
+                                  <Style>
+                                    <FontWeight>Bold</FontWeight>
+                                    <Color>#444446</Color>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox5</rd:DefaultName>
@@ -320,6 +337,7 @@ NON EMPTY { ([Dim Film].[Film Id].[Film Id].ALLMEMBERS * [Dim Film].[Title].[Tit
                               <Color>LightGrey</Color>
                               <Style>Solid</Style>
                             </Border>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -339,11 +357,14 @@ NON EMPTY { ([Dim Film].[Film Id].[Film Id].ALLMEMBERS * [Dim Film].[Title].[Tit
                                 <TextRun>
                                   <Value>Amount</Value>
                                   <Style>
-                                    <FontFamily>Arial</FontFamily>
+                                    <FontWeight>Bold</FontWeight>
+                                    <Color>#444446</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox8</rd:DefaultName>
@@ -352,6 +373,7 @@ NON EMPTY { ([Dim Film].[Film Id].[Film Id].ALLMEMBERS * [Dim Film].[Title].[Tit
                               <Color>LightGrey</Color>
                               <Style>Solid</Style>
                             </Border>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -365,38 +387,6 @@ NON EMPTY { ([Dim Film].[Film Id].[Film Id].ALLMEMBERS * [Dim Film].[Title].[Tit
                 <TablixRow>
                   <Height>0.25in</Height>
                   <TablixCells>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Category_Name">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>=Fields!Category_Name.Value</Value>
-                                  <Style>
-                                    <FontFamily>Arial</FontFamily>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style />
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Category_Name</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
-                            </Border>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
                     <TablixCell>
                       <CellContents>
                         <Textbox Name="Title">
@@ -496,9 +486,16 @@ NON EMPTY { ([Dim Film].[Film Id].[Film Id].ALLMEMBERS * [Dim Film].[Title].[Tit
             <TablixColumnHierarchy>
               <TablixMembers>
                 <TablixMember />
-                <TablixMember />
-                <TablixMember />
-                <TablixMember />
+                <TablixMember>
+                  <Visibility>
+                    <Hidden>=Parameters!Sort.Value &lt;&gt; 2</Hidden>
+                  </Visibility>
+                </TablixMember>
+                <TablixMember>
+                  <Visibility>
+                    <Hidden>=Parameters!Sort.Value &lt;&gt; 1</Hidden>
+                  </Visibility>
+                </TablixMember>
               </TablixMembers>
             </TablixColumnHierarchy>
             <TablixRowHierarchy>
@@ -508,6 +505,9 @@ NON EMPTY { ([Dim Film].[Film Id].[Film Id].ALLMEMBERS * [Dim Film].[Title].[Tit
                 </TablixMember>
                 <TablixMember>
                   <Group Name="Details" />
+                  <Visibility>
+                    <Hidden>=IIf(Parameters!Show_5.Value=1 and RowNumber("DataSet1")=1, False, (IIf((Parameters!Show_5.Value=5 and RowNumber("DataSet1")&lt;6) OR Parameters!Show_5.Value=0, False, True)))</Hidden>
+                  </Visibility>
                 </TablixMember>
               </TablixMembers>
             </TablixRowHierarchy>
@@ -522,12 +522,12 @@ Fields!Facts_Count.Value)))))))</Value>
                 <Direction>Descending</Direction>
               </SortExpression>
             </SortExpressions>
-            <Top>0.26389in</Top>
+            <Top>0.61111in</Top>
             <Left>0in</Left>
-            <Height>0.5in</Height>
-            <Width>4in</Width>
+            <Height>0.69792in</Height>
+            <Width>5.94792in</Width>
             <Visibility>
-              <Hidden>=Parameters!Filter_by_categories.Value=1</Hidden>
+              <Hidden>=Parameters!Filter_by_categories.Value=0</Hidden>
             </Visibility>
             <Style>
               <Border>
@@ -542,72 +542,116 @@ Fields!Facts_Count.Value)))))))</Value>
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>Report №2</Value>
-                    <Style />
+                    <Value>="ANALYTIC REPORT BY PRODUCTS - " + Parameters!Order.Label + " " + Parameters!Show_5.Label</Value>
+                    <Style>
+                      <FontSize>14pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <Color>White</Color>
+                    </Style>
                   </TextRun>
                 </TextRuns>
-                <Style />
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox7</rd:DefaultName>
             <Left>0in</Left>
-            <Height>0.25in</Height>
-            <Width>3in</Width>
+            <Height>0.30208in</Height>
+            <Width>4.70833in</Width>
             <ZIndex>1</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
               </Border>
+              <BackgroundColor>#00c4da</BackgroundColor>
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
               <PaddingBottom>2pt</PaddingBottom>
             </Style>
           </Textbox>
-          <Tablix Name="Tablix2">
+          <Textbox Name="Textbox1">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=iif(Parameters!Filter_by_categories.Value = 1, "FOR FILM CATEGORY " + Parameters!category_name.Value, "FOR ALL FILM CATEGORIES")</Value>
+                    <Style>
+                      <FontSize>14pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <Color>White</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox1</rd:DefaultName>
+            <Top>0.30208in</Top>
+            <Left>0in</Left>
+            <Height>0.29514in</Height>
+            <Width>4.70833in</Width>
+            <ZIndex>2</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <BackgroundColor>#00c4da</BackgroundColor>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Tablix Name="Tablix3">
             <TablixBody>
               <TablixColumns>
                 <TablixColumn>
-                  <Width>1in</Width>
+                  <Width>3.4375in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1in</Width>
+                  <Width>1.27083in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1in</Width>
-                </TablixColumn>
-                <TablixColumn>
-                  <Width>1in</Width>
+                  <Width>1.23958in</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
                 <TablixRow>
-                  <Height>0.25in</Height>
+                  <Height>0.4375in</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox11">
+                        <Textbox Name="Textbox17">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Category Name</Value>
+                                  <Value>Product</Value>
                                   <Style>
-                                    <FontFamily>Arial</FontFamily>
+                                    <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox10</rd:DefaultName>
+                          <rd:DefaultName>Textbox17</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
                               <Style>Solid</Style>
                             </Border>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -618,26 +662,32 @@ Fields!Facts_Count.Value)))))))</Value>
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox4">
+                        <Textbox Name="Textbox19">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Title</Value>
-                                  <Style />
+                                  <Value>Operations quantity</Value>
+                                  <Style>
+                                    <FontWeight>Bold</FontWeight>
+                                    <Color>#444446</Color>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox3</rd:DefaultName>
+                          <rd:DefaultName>Textbox19</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
                               <Style>Solid</Style>
                             </Border>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -648,37 +698,7 @@ Fields!Facts_Count.Value)))))))</Value>
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox6">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>Facts Count</Value>
-                                  <Style />
-                                </TextRun>
-                              </TextRuns>
-                              <Style />
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox5</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
-                            </Border>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox9">
+                        <Textbox Name="Textbox21">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
@@ -687,19 +707,23 @@ Fields!Facts_Count.Value)))))))</Value>
                                 <TextRun>
                                   <Value>Amount</Value>
                                   <Style>
-                                    <FontFamily>Arial</FontFamily>
+                                    <FontWeight>Bold</FontWeight>
+                                    <Color>#444446</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox8</rd:DefaultName>
+                          <rd:DefaultName>Textbox21</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
                               <Style>Solid</Style>
                             </Border>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -715,39 +739,7 @@ Fields!Facts_Count.Value)))))))</Value>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Category_Name2">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>=Fields!Category_Name.Value</Value>
-                                  <Style>
-                                    <FontFamily>Arial</FontFamily>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style />
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Category_Name</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
-                            </Border>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Title2">
+                        <Textbox Name="Title1">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
@@ -761,7 +753,7 @@ Fields!Facts_Count.Value)))))))</Value>
                               <Style />
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Title</rd:DefaultName>
+                          <rd:DefaultName>Title1</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -777,7 +769,7 @@ Fields!Facts_Count.Value)))))))</Value>
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Facts_Count2">
+                        <Textbox Name="Facts_Count1">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
@@ -791,7 +783,7 @@ Fields!Facts_Count.Value)))))))</Value>
                               <Style />
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Facts_Count</rd:DefaultName>
+                          <rd:DefaultName>Facts_Count1</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -807,7 +799,7 @@ Fields!Facts_Count.Value)))))))</Value>
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Amount2">
+                        <Textbox Name="Amount1">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
@@ -815,15 +807,13 @@ Fields!Facts_Count.Value)))))))</Value>
                               <TextRuns>
                                 <TextRun>
                                   <Value>=Fields!Amount.Value</Value>
-                                  <Style>
-                                    <FontFamily>Arial</FontFamily>
-                                  </Style>
+                                  <Style />
                                 </TextRun>
                               </TextRuns>
                               <Style />
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Amount</rd:DefaultName>
+                          <rd:DefaultName>Amount1</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -844,9 +834,16 @@ Fields!Facts_Count.Value)))))))</Value>
             <TablixColumnHierarchy>
               <TablixMembers>
                 <TablixMember />
-                <TablixMember />
-                <TablixMember />
-                <TablixMember />
+                <TablixMember>
+                  <Visibility>
+                    <Hidden>=Parameters!Sort.Value &lt;&gt; 2</Hidden>
+                  </Visibility>
+                </TablixMember>
+                <TablixMember>
+                  <Visibility>
+                    <Hidden>=Parameters!Sort.Value &lt;&gt; 1</Hidden>
+                  </Visibility>
+                </TablixMember>
               </TablixMembers>
             </TablixColumnHierarchy>
             <TablixRowHierarchy>
@@ -855,27 +852,20 @@ Fields!Facts_Count.Value)))))))</Value>
                   <KeepWithGroup>After</KeepWithGroup>
                 </TablixMember>
                 <TablixMember>
-                  <Group Name="Details2" />
+                  <Group Name="Details1" />
+                  <Visibility>
+                    <Hidden>=IIf(Parameters!Show_5.Value=1 and RowNumber("DataSet_full")=1, False, (IIf((Parameters!Show_5.Value=5 and RowNumber("DataSet_full")&lt;6) OR Parameters!Show_5.Value=0, False, True)))</Hidden>
+                  </Visibility>
                 </TablixMember>
               </TablixMembers>
             </TablixRowHierarchy>
-            <DataSetName>DataSet1</DataSetName>
-            <SortExpressions>
-              <SortExpression>
-                <Value>=IIf(Parameters!Sort.Value=1 and Parameters!Order.Value=1, Fields!Amount.Value, 
-(IIf( Parameters!Sort.Value=1 and Parameters!Order.Value=0,(-Fields!Amount.Value),
-(IIf(Parameters!Sort.Value=2 and Parameters!Order.Value=1, Fields!Facts_Count.Value, 
-(IIf(Parameters!Sort.Value=2 and Parameters!Order.Value=0, (-Fields!Facts_Count.Value), 
-Fields!Facts_Count.Value)))))))</Value>
-                <Direction>Descending</Direction>
-              </SortExpression>
-            </SortExpressions>
-            <Top>0.79167in</Top>
-            <Height>0.5in</Height>
-            <Width>4in</Width>
-            <ZIndex>2</ZIndex>
+            <DataSetName>DataSet_full</DataSetName>
+            <Top>1.30903in</Top>
+            <Height>0.6875in</Height>
+            <Width>5.94792in</Width>
+            <ZIndex>3</ZIndex>
             <Visibility>
-              <Hidden>=Parameters!Filter_by_categories.Value = 0</Hidden>
+              <Hidden>=Parameters!Filter_by_categories.Value=1</Hidden>
             </Visibility>
             <Style>
               <Border>
@@ -884,7 +874,7 @@ Fields!Facts_Count.Value)))))))</Value>
             </Style>
           </Tablix>
         </ReportItems>
-        <Height>2in</Height>
+        <Height>3.34375in</Height>
         <Style />
       </Body>
       <Width>6.5in</Width>
@@ -898,39 +888,39 @@ Fields!Facts_Count.Value)))))))</Value>
     </ReportSection>
   </ReportSections>
   <ReportParameters>
-    <ReportParameter Name="category_name">
+    <ReportParameter Name="Order">
       <DataType>String</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>[Dim Category].[Category Name].&amp;[Action]</Value>
-        </Values>
-      </DefaultValue>
-      <Prompt>category_name</Prompt>
-      <ValidValues>
-        <DataSetReference>
-          <DataSetName>category_name</DataSetName>
-          <ValueField>ParameterValue</ValueField>
-          <LabelField>ParameterCaptionIndented</LabelField>
-        </DataSetReference>
-      </ValidValues>
-    </ReportParameter>
-    <ReportParameter Name="Filter_by_categories">
-      <DataType>Integer</DataType>
       <DefaultValue>
         <Values>
           <Value>1</Value>
         </Values>
       </DefaultValue>
-      <Prompt>Filter_by_categories</Prompt>
+      <Prompt>Order</Prompt>
       <ValidValues>
         <ParameterValues>
           <ParameterValue>
             <Value>1</Value>
-            <Label>Yes</Label>
+            <Label>Top</Label>
           </ParameterValue>
           <ParameterValue>
             <Value>0</Value>
-            <Label>No</Label>
+            <Label>Bottom</Label>
+          </ParameterValue>
+        </ParameterValues>
+      </ValidValues>
+    </ReportParameter>
+    <ReportParameter Name="Sort">
+      <DataType>String</DataType>
+      <Prompt>Sort</Prompt>
+      <ValidValues>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>1</Value>
+            <Label>Amount</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>2</Value>
+            <Label>Operations count</Label>
           </ParameterValue>
         </ParameterValues>
       </ValidValues>
@@ -956,42 +946,44 @@ Fields!Facts_Count.Value)))))))</Value>
         </ParameterValues>
       </ValidValues>
     </ReportParameter>
-    <ReportParameter Name="Sort">
-      <DataType>String</DataType>
-      <Prompt>Sort</Prompt>
-      <ValidValues>
-        <ParameterValues>
-          <ParameterValue>
-            <Value>1</Value>
-            <Label>Amount</Label>
-          </ParameterValue>
-          <ParameterValue>
-            <Value>2</Value>
-            <Label>Operations count</Label>
-          </ParameterValue>
-        </ParameterValues>
-      </ValidValues>
-    </ReportParameter>
-    <ReportParameter Name="Order">
-      <DataType>String</DataType>
+    <ReportParameter Name="Filter_by_categories">
+      <DataType>Integer</DataType>
       <DefaultValue>
         <Values>
           <Value>1</Value>
         </Values>
       </DefaultValue>
-      <Prompt>Order</Prompt>
+      <Prompt>Include filter by category</Prompt>
       <ValidValues>
         <ParameterValues>
           <ParameterValue>
             <Value>1</Value>
-            <Label>Top</Label>
+            <Label>Yes</Label>
           </ParameterValue>
           <ParameterValue>
             <Value>0</Value>
-            <Label>Bottom</Label>
+            <Label>No</Label>
           </ParameterValue>
         </ParameterValues>
       </ValidValues>
+    </ReportParameter>
+    <ReportParameter Name="category_name">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <DataSetReference>
+          <DataSetName>Categories</DataSetName>
+          <ValueField>category_name</ValueField>
+        </DataSetReference>
+      </DefaultValue>
+      <Prompt>Сategory</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>Categories</DataSetName>
+          <ValueField>category_name</ValueField>
+          <LabelField>category_name</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <UsedInQuery>True</UsedInQuery>
     </ReportParameter>
   </ReportParameters>
   <ReportParametersLayout>
@@ -1002,12 +994,12 @@ Fields!Facts_Count.Value)))))))</Value>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
           <RowIndex>0</RowIndex>
-          <ParameterName>category_name</ParameterName>
+          <ParameterName>Order</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>1</ColumnIndex>
           <RowIndex>0</RowIndex>
-          <ParameterName>Filter_by_categories</ParameterName>
+          <ParameterName>Sort</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>2</ColumnIndex>
@@ -1015,14 +1007,14 @@ Fields!Facts_Count.Value)))))))</Value>
           <ParameterName>Show_5</ParameterName>
         </CellDefinition>
         <CellDefinition>
-          <ColumnIndex>3</ColumnIndex>
-          <RowIndex>0</RowIndex>
-          <ParameterName>Sort</ParameterName>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>1</RowIndex>
+          <ParameterName>category_name</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
           <RowIndex>1</RowIndex>
-          <ParameterName>Order</ParameterName>
+          <ParameterName>Filter_by_categories</ParameterName>
         </CellDefinition>
       </CellDefinitions>
     </GridLayoutDefinition>
