@@ -284,7 +284,7 @@ FROM            dimCategory</CommandText>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Product</Value>
+                                  <Value>Products</Value>
                                   <Style>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -308,6 +308,7 @@ FROM            dimCategory</CommandText>
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
+                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
@@ -523,9 +524,8 @@ Fields!Facts_Count.Value)))))))</Value>
               </SortExpression>
             </SortExpressions>
             <Top>0.61111in</Top>
-            <Left>0in</Left>
             <Height>0.69792in</Height>
-            <Width>5.94792in</Width>
+            <Width>5.94791in</Width>
             <Visibility>
               <Hidden>=Parameters!Filter_by_categories.Value=0</Hidden>
             </Visibility>
@@ -556,7 +556,6 @@ Fields!Facts_Count.Value)))))))</Value>
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox7</rd:DefaultName>
-            <Left>0in</Left>
             <Height>0.30208in</Height>
             <Width>4.70833in</Width>
             <ZIndex>1</ZIndex>
@@ -593,7 +592,6 @@ Fields!Facts_Count.Value)))))))</Value>
             </Paragraphs>
             <rd:DefaultName>Textbox1</rd:DefaultName>
             <Top>0.30208in</Top>
-            <Left>0in</Left>
             <Height>0.29514in</Height>
             <Width>4.70833in</Width>
             <ZIndex>2</ZIndex>
@@ -634,7 +632,7 @@ Fields!Facts_Count.Value)))))))</Value>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Product</Value>
+                                  <Value>Products</Value>
                                   <Style>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -860,9 +858,19 @@ Fields!Facts_Count.Value)))))))</Value>
               </TablixMembers>
             </TablixRowHierarchy>
             <DataSetName>DataSet_full</DataSetName>
+            <SortExpressions>
+              <SortExpression>
+                <Value>=IIf(Parameters!Sort.Value=1 and Parameters!Order.Value=1, Fields!Amount.Value, 
+(IIf( Parameters!Sort.Value=1 and Parameters!Order.Value=0,(-Fields!Amount.Value),
+(IIf(Parameters!Sort.Value=2 and Parameters!Order.Value=1, Fields!Facts_Count.Value, 
+(IIf(Parameters!Sort.Value=2 and Parameters!Order.Value=0, (-Fields!Facts_Count.Value), 
+Fields!Facts_Count.Value)))))))</Value>
+                <Direction>Descending</Direction>
+              </SortExpression>
+            </SortExpressions>
             <Top>1.30903in</Top>
             <Height>0.6875in</Height>
-            <Width>5.94792in</Width>
+            <Width>5.94791in</Width>
             <ZIndex>3</ZIndex>
             <Visibility>
               <Hidden>=Parameters!Filter_by_categories.Value=1</Hidden>
