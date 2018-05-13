@@ -266,7 +266,9 @@ FROM [Sakila_DWH]
                         <UseValueAsLabel>true</UseValueAsLabel>
                         <Visible>true</Visible>
                       </ChartDataLabel>
-                      <Style />
+                      <Style>
+                        <Color>Red</Color>
+                      </Style>
                       <ChartMarker>
                         <Style />
                       </ChartMarker>
