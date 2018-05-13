@@ -174,6 +174,10 @@
           <QueryParameter Name="Category">
             <Value>=Parameters!Category.Value</Value>
           </QueryParameter>
+          <QueryParameter Name="Measures">
+            <Value>=Parameters!Amount.Value</Value>
+            <rd:UserDefined>true</rd:UserDefined>
+          </QueryParameter>
         </QueryParameters>
         <CommandText>SELECT NON EMPTY { [Measures].[Amount], [Measures].[Facts Count]} ON COLUMNS, 
              NON EMPTY { STRTOSET(@Category,CONSTRAINED)* 
@@ -341,10 +345,6 @@ WHERE STRTOMEMBER(@StartMonth,CONSTRAINED):STRTOMEMBER(@EndMonth,CONSTRAINED)
         <Field Name="Facts_Count">
           <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Measure" UniqueName="[Measures].[Facts Count]" /&gt;</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="Measures">
-          <Value>=iif(Parameters!Measures.Label="Amount",Fields!Amount.Value,
-Fields!Facts_Count.Value)</Value>
         </Field>
       </Fields>
     </DataSet>
@@ -550,21 +550,21 @@ Fields!Facts_Count.Value)</Value>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Measures">
+                        <Textbox Name="Amount">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Sum(Fields!Measures.Value)</Value>
+                                  <Value>=Sum(Fields!Amount.Value)</Value>
                                   <Style />
                                 </TextRun>
                               </TextRuns>
                               <Style />
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Measures</rd:DefaultName>
+                          <rd:DefaultName>Amount</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -767,22 +767,6 @@ Fields!Facts_Count.Value)</Value>
       </ValidValues>
       <MultiValue>true</MultiValue>
     </ReportParameter>
-    <ReportParameter Name="Measures">
-      <DataType>String</DataType>
-      <Prompt>Measures</Prompt>
-      <ValidValues>
-        <ParameterValues>
-          <ParameterValue>
-            <Value>="[Measures].[Amount]"</Value>
-            <Label>Amount</Label>
-          </ParameterValue>
-          <ParameterValue>
-            <Value>="Facts Counts"</Value>
-            <Label>Facts Counts</Label>
-          </ParameterValue>
-        </ParameterValues>
-      </ValidValues>
-    </ReportParameter>
   </ReportParameters>
   <ReportParametersLayout>
     <GridLayoutDefinition>
@@ -808,11 +792,6 @@ Fields!Facts_Count.Value)</Value>
           <ColumnIndex>3</ColumnIndex>
           <RowIndex>0</RowIndex>
           <ParameterName>Category</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>1</RowIndex>
-          <ParameterName>Measures</ParameterName>
         </CellDefinition>
       </CellDefinitions>
     </GridLayoutDefinition>
