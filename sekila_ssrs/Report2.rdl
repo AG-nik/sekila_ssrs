@@ -284,7 +284,7 @@ FROM            dimCategory</CommandText>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Product</Value>
+                                  <Value>Products</Value>
                                   <Style>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -308,6 +308,7 @@ FROM            dimCategory</CommandText>
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
+                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
@@ -631,7 +632,7 @@ Fields!Facts_Count.Value)))))))</Value>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Product</Value>
+                                  <Value>Products</Value>
                                   <Style>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
