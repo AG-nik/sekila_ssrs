@@ -169,9 +169,9 @@ SELECT {[Measures].[ParameterCaption]} ON COLUMNS ,
             </Paragraphs>
             <rd:DefaultName>Textbox1</rd:DefaultName>
             <Top>0cm</Top>
-            <Left>0.02117cm</Left>
-            <Height>1.143cm</Height>
-            <Width>15.54479cm</Width>
+            <Left>0cm</Left>
+            <Height>1.19944cm</Height>
+            <Width>15.4813cm</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -203,8 +203,8 @@ SELECT {[Measures].[ParameterCaption]} ON COLUMNS ,
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>1.26294cm</Top>
-            <Left>0.04233cm</Left>
+            <Top>1.19944cm</Top>
+            <Left>0cm</Left>
             <Height>0.71967cm</Height>
             <Width>6.24417cm</Width>
             <ZIndex>1</ZIndex>
@@ -241,8 +241,8 @@ SELECT {[Measures].[ParameterCaption]} ON COLUMNS ,
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>1.26294cm</Top>
-            <Left>6.2865cm</Left>
+            <Top>1.19944cm</Top>
+            <Left>6.24417cm</Left>
             <Height>0.71967cm</Height>
             <Width>9.23713cm</Width>
             <ZIndex>2</ZIndex>
@@ -280,8 +280,8 @@ SELECT {[Measures].[ParameterCaption]} ON COLUMNS ,
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>1.98261cm</Top>
-            <Left>0.04233cm</Left>
+            <Top>1.91911cm</Top>
+            <Left>0cm</Left>
             <Height>0.71967cm</Height>
             <Width>6.24417cm</Width>
             <ZIndex>3</ZIndex>
@@ -318,8 +318,8 @@ SELECT {[Measures].[ParameterCaption]} ON COLUMNS ,
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>1.98261cm</Top>
-            <Left>6.2865cm</Left>
+            <Top>1.91911cm</Top>
+            <Left>6.24417cm</Left>
             <Height>0.71967cm</Height>
             <Width>9.23713cm</Width>
             <ZIndex>4</ZIndex>
@@ -357,8 +357,8 @@ SELECT {[Measures].[ParameterCaption]} ON COLUMNS ,
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>2.70228cm</Top>
-            <Left>0.04233cm</Left>
+            <Top>2.63878cm</Top>
+            <Left>0cm</Left>
             <Height>0.71967cm</Height>
             <Width>6.24417cm</Width>
             <ZIndex>5</ZIndex>
@@ -396,8 +396,8 @@ SELECT {[Measures].[ParameterCaption]} ON COLUMNS ,
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>3.37962cm</Top>
-            <Left>0.04233cm</Left>
+            <Top>3.3514cm</Top>
+            <Left>0cm</Left>
             <Height>0.71967cm</Height>
             <Width>6.24417cm</Width>
             <ZIndex>6</ZIndex>
@@ -436,8 +436,8 @@ SELECT {[Measures].[ParameterCaption]} ON COLUMNS ,
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>4.09929cm</Top>
-            <Left>0.04233cm</Left>
+            <Top>4.07107cm</Top>
+            <Left>0cm</Left>
             <Height>0.71967cm</Height>
             <Width>6.24417cm</Width>
             <ZIndex>7</ZIndex>
@@ -475,8 +475,8 @@ SELECT {[Measures].[ParameterCaption]} ON COLUMNS ,
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>4.81896cm</Top>
-            <Left>0.04233cm</Left>
+            <Top>4.79074cm</Top>
+            <Left>0cm</Left>
             <Height>0.71967cm</Height>
             <Width>6.24417cm</Width>
             <ZIndex>8</ZIndex>
@@ -514,8 +514,8 @@ SELECT {[Measures].[ParameterCaption]} ON COLUMNS ,
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>2.70228cm</Top>
-            <Left>6.2865cm</Left>
+            <Top>2.63878cm</Top>
+            <Left>6.24417cm</Left>
             <Height>0.71967cm</Height>
             <Width>9.23713cm</Width>
             <ZIndex>9</ZIndex>
@@ -552,8 +552,8 @@ SELECT {[Measures].[ParameterCaption]} ON COLUMNS ,
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>3.37962cm</Top>
-            <Left>6.2865cm</Left>
+            <Top>3.3514cm</Top>
+            <Left>6.24417cm</Left>
             <Height>0.71967cm</Height>
             <Width>9.23713cm</Width>
             <ZIndex>10</ZIndex>
@@ -590,8 +590,8 @@ SELECT {[Measures].[ParameterCaption]} ON COLUMNS ,
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>4.09929cm</Top>
-            <Left>6.2865cm</Left>
+            <Top>4.07107cm</Top>
+            <Left>6.24417cm</Left>
             <Height>0.71967cm</Height>
             <Width>9.23713cm</Width>
             <ZIndex>11</ZIndex>
@@ -628,8 +628,8 @@ SELECT {[Measures].[ParameterCaption]} ON COLUMNS ,
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>4.81896cm</Top>
-            <Left>6.2865cm</Left>
+            <Top>4.79074cm</Top>
+            <Left>6.24417cm</Left>
             <Height>0.71967cm</Height>
             <Width>9.23713cm</Width>
             <ZIndex>12</ZIndex>
@@ -667,8 +667,8 @@ SELECT {[Measures].[ParameterCaption]} ON COLUMNS ,
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>5.53863cm</Top>
-            <Left>0.04233cm</Left>
+            <Top>5.51041cm</Top>
+            <Left>0cm</Left>
             <Height>0.71967cm</Height>
             <Width>6.24417cm</Width>
             <ZIndex>13</ZIndex>
@@ -707,8 +707,8 @@ SELECT {[Measures].[ParameterCaption]} ON COLUMNS ,
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>6.21597cm</Top>
-            <Left>0.04233cm</Left>
+            <Top>6.22303cm</Top>
+            <Left>0cm</Left>
             <Height>0.71967cm</Height>
             <Width>6.24417cm</Width>
             <ZIndex>14</ZIndex>
@@ -748,8 +748,8 @@ SELECT {[Measures].[ParameterCaption]} ON COLUMNS ,
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>5.53863cm</Top>
-            <Left>6.2865cm</Left>
+            <Top>5.51041cm</Top>
+            <Left>6.24417cm</Left>
             <Height>0.71967cm</Height>
             <Width>9.23713cm</Width>
             <ZIndex>15</ZIndex>
@@ -789,8 +789,8 @@ SELECT {[Measures].[ParameterCaption]} ON COLUMNS ,
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>6.21597cm</Top>
-            <Left>6.2865cm</Left>
+            <Top>6.22303cm</Top>
+            <Left>6.24417cm</Left>
             <Height>0.71967cm</Height>
             <Width>9.23713cm</Width>
             <ZIndex>16</ZIndex>
@@ -811,10 +811,10 @@ SELECT {[Measures].[ParameterCaption]} ON COLUMNS ,
             </Style>
           </Textbox>
         </ReportItems>
-        <Height>6.93564cm</Height>
+        <Height>6.9427cm</Height>
         <Style />
       </Body>
-      <Width>15.56596cm</Width>
+      <Width>15.4813cm</Width>
       <Page>
         <PageHeight>29.7cm</PageHeight>
         <PageWidth>21cm</PageWidth>
