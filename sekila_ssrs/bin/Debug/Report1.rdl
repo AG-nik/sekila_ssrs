@@ -1519,7 +1519,9 @@ FROM [Sakila_DWH]</Statement>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Right</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Avg_3M_Rent_Days</rd:DefaultName>

@@ -267,7 +267,7 @@ FROM [Sakila_DWH]
                         <Visible>true</Visible>
                       </ChartDataLabel>
                       <Style>
-                        <Color>Red</Color>
+                        <Color>Plum</Color>
                       </Style>
                       <ChartMarker>
                         <Style />
@@ -674,11 +674,16 @@ FROM [Sakila_DWH]
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>amount</Value>
-                    <Style />
+                    <Value>ORDER SCHEDULE amount FOR THE FIRST WEEK OF EACH MONTH</Value>
+                    <Style>
+                      <FontWeight>Bold</FontWeight>
+                      <Color>White</Color>
+                    </Style>
                   </TextRun>
                 </TextRuns>
-                <Style />
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
