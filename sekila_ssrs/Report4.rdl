@@ -4,11 +4,7 @@
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
     <DataSource Name="sakila_ssas">
-      <ConnectionProperties>
-        <DataProvider>OLEDB-MD</DataProvider>
-        <ConnectString>Data Source=DESKTOP-U7JQ2B2\MM;Initial Catalog=sekila_ssas</ConnectString>
-        <IntegratedSecurity>true</IntegratedSecurity>
-      </ConnectionProperties>
+      <DataSourceReference>Sekila_cube</DataSourceReference>
       <rd:SecurityType>Integrated</rd:SecurityType>
       <rd:DataSourceID>48a90dca-7f10-4234-bbb8-6eec38f967f8</rd:DataSourceID>
     </DataSource>
@@ -252,7 +248,7 @@ FROM [Sakila_DWH]
             <ChartData>
               <ChartSeriesCollection>
                 <ChartSeries Name="First_Week_Amount">
-                  <Hidden>=Parameters!sort.Value=1</Hidden>
+                  <Hidden>=Parameters!sort.Value=2</Hidden>
                   <ChartDataPoints>
                     <ChartDataPoint>
                       <ChartDataPointValues>
@@ -285,6 +281,9 @@ FROM [Sakila_DWH]
                       <Style />
                     </ChartDataLabel>
                   </ChartEmptyPoints>
+                  <ChartItemInLegend>
+                    <LegendText>First Week Amount</LegendText>
+                  </ChartItemInLegend>
                   <ValueAxisName>Primary</ValueAxisName>
                   <CategoryAxisName>Primary</CategoryAxisName>
                   <ChartSmartLabel>
@@ -293,8 +292,8 @@ FROM [Sakila_DWH]
                     <MinMovingDistance>0pt</MinMovingDistance>
                   </ChartSmartLabel>
                 </ChartSeries>
-                <ChartSeries Name="First_Week_Facts_Count">
-                  <Hidden>=Parameters!sort.Value=2</Hidden>
+                <ChartSeries Name="First_Weeks_Count">
+                  <Hidden>=Parameters!sort.Value=1</Hidden>
                   <ChartDataPoints>
                     <ChartDataPoint>
                       <ChartDataPointValues>
@@ -322,6 +321,9 @@ FROM [Sakila_DWH]
                       <Style />
                     </ChartDataLabel>
                   </ChartEmptyPoints>
+                  <ChartItemInLegend>
+                    <LegendText>First Week Count</LegendText>
+                  </ChartItemInLegend>
                   <ValueAxisName>Primary</ValueAxisName>
                   <CategoryAxisName>Primary</CategoryAxisName>
                   <ChartSmartLabel>
@@ -637,7 +639,7 @@ FROM [Sakila_DWH]
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>ORDER SCHEDULE count FOR THE FIRST WEEK OF EACH MONTH</Value>
+                    <Value>ORDER AMOUNT FOR THE FIRST WEEK OF EACH MONTH</Value>
                     <Style>
                       <FontWeight>Bold</FontWeight>
                       <Color>White</Color>
@@ -674,7 +676,7 @@ FROM [Sakila_DWH]
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>ORDER SCHEDULE amount FOR THE FIRST WEEK OF EACH MONTH</Value>
+                    <Value>ORDER COUNT FOR THE FIRST WEEK OF EACH MONTH</Value>
                     <Style>
                       <FontWeight>Bold</FontWeight>
                       <Color>White</Color>
