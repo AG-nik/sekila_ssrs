@@ -241,9 +241,6 @@
       <Query>
         <DataSourceName>Sekila_cube</DataSourceName>
         <QueryParameters>
-          <QueryParameter Name="city_name">
-            <Value>=Parameters!city_name.Value</Value>
-          </QueryParameter>
           <QueryParameter Name="employee">
             <Value>=Parameters!employee.Value</Value>
           </QueryParameter>
@@ -262,18 +259,14 @@
           <QueryParameter Name="category_name">
             <Value>=Parameters!category_name.Value</Value>
           </QueryParameter>
+          <QueryParameter Name="country">
+            <Value>=Parameters!country.Value</Value>
+          </QueryParameter>
         </QueryParameters>
-        <CommandText> WITH
-MEMBER [Measures].[Avg 3M Amount] AS round(Avg([Dim Date].[Calendar].prevmember.firstchild:[Dim Date].[Calendar].nextmember.lastchild, [Measures].[Amount]), 2)
+        <CommandText>SELECT 
+NON EMPTY { [Measures].[Run Avg 3M Day Amount], [Measures].[Run Avg 3M Day Operations Count], [Measures].[Run Avg 3M Rent Days] } ON COLUMNS, 
 
-MEMBER [Measures].[Avg 3M Facts Count] AS round (Avg([Dim Date].[Calendar].prevmember.firstchild:[Dim Date].[Calendar].nextmember.lastchild, [Measures].[Facts Count]), 2)
-
-MEMBER [Measures].[Avg 3M Rent Days] AS round (Sum ([Dim Date].[Calendar].prevmember.firstchild:[Dim Date].[Calendar].nextmember.lastchild, [Measures].[Rent Days])/Sum ([Dim Date].[Calendar].prevmember.firstchild:[Dim Date].[Calendar].nextmember.lastchild, [Measures].[Rent Days Count]), 2)
-
-SELECT 
-NON EMPTY { [Measures].[Amount], [Measures].[Facts Count], [Measures].[Rent Days], [Measures].[Avg 3M Amount], [Measures].[Avg 3M Facts Count], [Measures].[Avg 3M Rent Days] } ON COLUMNS, 
-
-NON EMPTY { (strtomember(@start_month):strtomember(@end_month))  * strtoset(@employee) * [Dim Employee].[Employee Id].[Employee Id].ALLMEMBERS * strtoset (@original_language) * strtoset (@translation_language) * strtoset (@city_name) *  strtoset(@category_name)  }  ON ROWS 
+NON EMPTY { nonempty(strtomember(@start_month):strtomember(@end_month))  * nonempty(strtoset(@employee)) * [Dim Employee].[Employee Id].[Employee Id].ALLMEMBERS * nonempty(strtoset (@original_language)) * nonempty(strtoset (@translation_language))  *  nonempty (strtoset(@category_name)) * nonempty(strtoset (@country)) }  ON ROWS 
 FROM [Sakila_DWH] </CommandText>
         <rd:DesignerState>
           <QueryDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.microsoft.com/AnalysisServices/QueryDefinition">
@@ -344,26 +337,6 @@ FROM [Sakila_DWH] </CommandText>
                   </Item>
                   <Item>
                     <ID xsi:type="Level">
-                      <DimensionName>Dim Geography</DimensionName>
-                      <HierarchyName>Hierarchy</HierarchyName>
-                      <HierarchyUniqueName>[Dim Geography].[Hierarchy]</HierarchyUniqueName>
-                      <LevelName>Country Name</LevelName>
-                      <UniqueName>[Dim Geography].[Hierarchy].[Country Name]</UniqueName>
-                    </ID>
-                    <ItemCaption>Country Name</ItemCaption>
-                  </Item>
-                  <Item>
-                    <ID xsi:type="Level">
-                      <DimensionName>Dim Geography</DimensionName>
-                      <HierarchyName>Hierarchy</HierarchyName>
-                      <HierarchyUniqueName>[Dim Geography].[Hierarchy]</HierarchyUniqueName>
-                      <LevelName>City Name</LevelName>
-                      <UniqueName>[Dim Geography].[Hierarchy].[City Name]</UniqueName>
-                    </ID>
-                    <ItemCaption>City Name</ItemCaption>
-                  </Item>
-                  <Item>
-                    <ID xsi:type="Level">
                       <DimensionName>Dim Category</DimensionName>
                       <HierarchyName>Category Name</HierarchyName>
                       <HierarchyUniqueName>[Dim Category].[Category Name]</HierarchyUniqueName>
@@ -373,51 +346,37 @@ FROM [Sakila_DWH] </CommandText>
                     <ItemCaption>Category Name</ItemCaption>
                   </Item>
                   <Item>
-                    <ID xsi:type="Measure">
-                      <MeasureName>Amount</MeasureName>
-                      <UniqueName>[Measures].[Amount]</UniqueName>
+                    <ID xsi:type="Level">
+                      <DimensionName>Dim Geography</DimensionName>
+                      <HierarchyName>Country Name</HierarchyName>
+                      <HierarchyUniqueName>[Dim Geography].[Country Name]</HierarchyUniqueName>
+                      <LevelName>Country Name</LevelName>
+                      <UniqueName>[Dim Geography].[Country Name].[Country Name]</UniqueName>
                     </ID>
-                    <ItemCaption>Amount</ItemCaption>
+                    <ItemCaption>Country Name</ItemCaption>
+                  </Item>
+                  <Item>
+                    <ID xsi:type="Measure">
+                      <MeasureName>Run Avg 3M Day Amount</MeasureName>
+                      <UniqueName>[Measures].[Run Avg 3M Day Amount]</UniqueName>
+                    </ID>
+                    <ItemCaption>Run Avg 3M Day Amount</ItemCaption>
                     <FormattedValue>true</FormattedValue>
                   </Item>
                   <Item>
                     <ID xsi:type="Measure">
-                      <MeasureName>Facts Count</MeasureName>
-                      <UniqueName>[Measures].[Facts Count]</UniqueName>
+                      <MeasureName>Run Avg 3M Day Operations Count</MeasureName>
+                      <UniqueName>[Measures].[Run Avg 3M Day Operations Count]</UniqueName>
                     </ID>
-                    <ItemCaption>Facts Count</ItemCaption>
+                    <ItemCaption>Run Avg 3M Day Operations Count</ItemCaption>
                     <FormattedValue>true</FormattedValue>
                   </Item>
                   <Item>
                     <ID xsi:type="Measure">
-                      <MeasureName>Rent Days</MeasureName>
-                      <UniqueName>[Measures].[Rent Days]</UniqueName>
+                      <MeasureName>Run Avg 3M Rent Days</MeasureName>
+                      <UniqueName>[Measures].[Run Avg 3M Rent Days]</UniqueName>
                     </ID>
-                    <ItemCaption>Rent Days</ItemCaption>
-                    <FormattedValue>true</FormattedValue>
-                  </Item>
-                  <Item>
-                    <ID xsi:type="Measure">
-                      <MeasureName>Avg 3M Amount</MeasureName>
-                      <UniqueName>[Measures].[Avg 3M Amount]</UniqueName>
-                    </ID>
-                    <ItemCaption>Avg 3M Amount</ItemCaption>
-                    <FormattedValue>true</FormattedValue>
-                  </Item>
-                  <Item>
-                    <ID xsi:type="Measure">
-                      <MeasureName>Avg 3M Facts Count</MeasureName>
-                      <UniqueName>[Measures].[Avg 3M Facts Count]</UniqueName>
-                    </ID>
-                    <ItemCaption>Avg 3M Facts Count</ItemCaption>
-                    <FormattedValue>true</FormattedValue>
-                  </Item>
-                  <Item>
-                    <ID xsi:type="Measure">
-                      <MeasureName>Avg 3M Rent Days</MeasureName>
-                      <UniqueName>[Measures].[Avg 3M Rent Days]</UniqueName>
-                    </ID>
-                    <ItemCaption>Avg 3M Rent Days</ItemCaption>
+                    <ItemCaption>Run Avg 3M Rent Days</ItemCaption>
                     <FormattedValue>true</FormattedValue>
                   </Item>
                 </Items>
@@ -432,48 +391,21 @@ FROM [Sakila_DWH] </CommandText>
               <QueryProperties />
             </QuerySpecification>
             <Query>
-              <Statement> WITH
-MEMBER [Measures].[Avg 3M Amount] AS round(Avg([Dim Date].[Calendar].prevmember.firstchild:[Dim Date].[Calendar].nextmember.lastchild, [Measures].[Amount]), 2)
+              <Statement>SELECT 
+NON EMPTY { [Measures].[Run Avg 3M Day Amount], [Measures].[Run Avg 3M Day Operations Count], [Measures].[Run Avg 3M Rent Days] } ON COLUMNS, 
 
-MEMBER [Measures].[Avg 3M Facts Count] AS round (Avg([Dim Date].[Calendar].prevmember.firstchild:[Dim Date].[Calendar].nextmember.lastchild, [Measures].[Facts Count]), 2)
-
-MEMBER [Measures].[Avg 3M Rent Days] AS round (Sum ([Dim Date].[Calendar].prevmember.firstchild:[Dim Date].[Calendar].nextmember.lastchild, [Measures].[Rent Days])/Sum ([Dim Date].[Calendar].prevmember.firstchild:[Dim Date].[Calendar].nextmember.lastchild, [Measures].[Rent Days Count]), 2)
-
-SELECT 
-NON EMPTY { [Measures].[Amount], [Measures].[Facts Count], [Measures].[Rent Days], [Measures].[Avg 3M Amount], [Measures].[Avg 3M Facts Count], [Measures].[Avg 3M Rent Days] } ON COLUMNS, 
-
-NON EMPTY { (strtomember(@start_month):strtomember(@end_month))  * strtoset(@employee) * [Dim Employee].[Employee Id].[Employee Id].ALLMEMBERS * strtoset (@original_language) * strtoset (@translation_language) * strtoset (@city_name) *  strtoset(@category_name)  }  ON ROWS 
+NON EMPTY { nonempty(strtomember(@start_month):strtomember(@end_month))  * nonempty(strtoset(@employee)) * [Dim Employee].[Employee Id].[Employee Id].ALLMEMBERS * nonempty(strtoset (@original_language)) * nonempty(strtoset (@translation_language))  *  nonempty (strtoset(@category_name)) * nonempty(strtoset (@country)) }  ON ROWS 
 FROM [Sakila_DWH] </Statement>
               <ParameterDefinitions>
                 <ParameterDefinition>
                   <Name>employee</Name>
                   <DefaultValues>
-                    <DefaultValue>[Dim Employee].[Full Name].&amp;[ERNESTUS CORNELISSEN]</DefaultValue>
+                    <DefaultValue>[Dim Employee].[Full Name].&amp;[ADIANA LANYON]</DefaultValue>
                   </DefaultValues>
                   <Caption>employee</Caption>
                   <HierarchyUniqueName>[Dim Employee].[Full Name]</HierarchyUniqueName>
                   <ParameterValuesQuery>
                     <Statement>WITH MEMBER [Measures].[ParameterCaption] AS [Dim Employee].[Full Name].CURRENTMEMBER.MEMBER_CAPTION MEMBER [Measures].[ParameterValue] AS [Dim Employee].[Full Name].CURRENTMEMBER.UNIQUENAME MEMBER [Measures].[ParameterLevel] AS [Dim Employee].[Full Name].CURRENTMEMBER.LEVEL.ORDINAL SELECT {[Measures].[ParameterCaption], [Measures].[ParameterValue], [Measures].[ParameterLevel]} ON COLUMNS , [Dim Employee].[Full Name].ALLMEMBERS ON ROWS FROM [Sakila_DWH]</Statement>
-                    <ParameterizedStatement>
-                      <ReferencedParameters />
-                    </ParameterizedStatement>
-                  </ParameterValuesQuery>
-                  <MultipleValues>true</MultipleValues>
-                </ParameterDefinition>
-                <ParameterDefinition>
-                  <Name>city_name</Name>
-                  <DefaultValues>
-<<<<<<< HEAD
-                    <DefaultValue>[Dim Geography].[Hierarchy].[City Name].&amp;[BELZ]&amp;[25]</DefaultValue>
-                    <DefaultValue>[Dim Geography].[Hierarchy].[City Name].&amp;[BERESTECHKO]&amp;[27]</DefaultValue>
-=======
-                    <DefaultValue>[Dim Geography].[City Name].&amp;[BELZ]&amp;[25]</DefaultValue>
->>>>>>> ad751d738c74d2e36be706dc591b4d8b83542c8c
-                  </DefaultValues>
-                  <Caption>city_name</Caption>
-                  <HierarchyUniqueName>[Dim Geography].[Hierarchy]</HierarchyUniqueName>
-                  <ParameterValuesQuery>
-                    <Statement>WITH MEMBER [Measures].[ParameterCaption] AS [Dim Geography].[Hierarchy].CURRENTMEMBER.MEMBER_CAPTION MEMBER [Measures].[ParameterValue] AS [Dim Geography].[Hierarchy].CURRENTMEMBER.UNIQUENAME MEMBER [Measures].[ParameterLevel] AS [Dim Geography].[Hierarchy].CURRENTMEMBER.LEVEL.ORDINAL SELECT {[Measures].[ParameterCaption], [Measures].[ParameterValue], [Measures].[ParameterLevel]} ON COLUMNS , [Dim Geography].[Hierarchy].ALLMEMBERS ON ROWS FROM [Sakila_DWH]</Statement>
                     <ParameterizedStatement>
                       <ReferencedParameters />
                     </ParameterizedStatement>
@@ -512,6 +444,7 @@ FROM [Sakila_DWH] </Statement>
                   <Name>category_name</Name>
                   <DefaultValues>
                     <DefaultValue>[Dim Category].[Category Name].&amp;[Action]</DefaultValue>
+                    <DefaultValue>[Dim Category].[Category Name].&amp;[Adventure]</DefaultValue>
                   </DefaultValues>
                   <Caption>category_name</Caption>
                   <HierarchyUniqueName>[Dim Category].[Category Name]</HierarchyUniqueName>
@@ -540,7 +473,7 @@ FROM [Sakila_DWH] </Statement>
                 <ParameterDefinition>
                   <Name>end_month</Name>
                   <DefaultValues>
-                    <DefaultValue>[Dim Date].[Calendar].[Month Number Of Year].&amp;[12]&amp;[2018]</DefaultValue>
+                    <DefaultValue>[Dim Date].[Calendar].[Month Number Of Year].&amp;[12]&amp;[2006]</DefaultValue>
                   </DefaultValues>
                   <Caption>end_month</Caption>
                   <HierarchyUniqueName>[Dim Date].[Calendar]</HierarchyUniqueName>
@@ -550,6 +483,22 @@ FROM [Sakila_DWH] </Statement>
                       <ReferencedParameters />
                     </ParameterizedStatement>
                   </ParameterValuesQuery>
+                </ParameterDefinition>
+                <ParameterDefinition>
+                  <Name>country</Name>
+                  <DefaultValues>
+                    <DefaultValue>[Dim Geography].[Country Name].&amp;[UKRAINE]</DefaultValue>
+                    <DefaultValue>[Dim Geography].[Country Name].&amp;[UNITED STATES]</DefaultValue>
+                  </DefaultValues>
+                  <Caption>country</Caption>
+                  <HierarchyUniqueName>[Dim Geography].[Country Name]</HierarchyUniqueName>
+                  <ParameterValuesQuery>
+                    <Statement>WITH MEMBER [Measures].[ParameterCaption] AS [Dim Geography].[Country Name].CURRENTMEMBER.MEMBER_CAPTION MEMBER [Measures].[ParameterValue] AS [Dim Geography].[Country Name].CURRENTMEMBER.UNIQUENAME MEMBER [Measures].[ParameterLevel] AS [Dim Geography].[Country Name].CURRENTMEMBER.LEVEL.ORDINAL SELECT {[Measures].[ParameterCaption], [Measures].[ParameterValue], [Measures].[ParameterLevel]} ON COLUMNS , [Dim Geography].[Country Name].ALLMEMBERS ON ROWS FROM [Sakila_DWH]</Statement>
+                    <ParameterizedStatement>
+                      <ReferencedParameters />
+                    </ParameterizedStatement>
+                  </ParameterValuesQuery>
+                  <MultipleValues>true</MultipleValues>
                 </ParameterDefinition>
               </ParameterDefinitions>
             </Query>
@@ -577,136 +526,29 @@ FROM [Sakila_DWH] </Statement>
           <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Level" UniqueName="[Dim Employee].[Employee Id].[Employee Id]" /&gt;</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="Amount">
-          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Measure" UniqueName="[Measures].[Amount]" /&gt;</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
         <Field Name="Original_Language">
           <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Level" UniqueName="[Dim Film].[Original Language].[Original Language]" /&gt;</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Country_Name">
-          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Level" UniqueName="[Dim Geography].[Hierarchy].[Country Name]" /&gt;</DataField>
+          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Level" UniqueName="[Dim Geography].[Country Name].[Country Name]" /&gt;</DataField>
           <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="City_Name">
-          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Level" UniqueName="[Dim Geography].[Hierarchy].[City Name]" /&gt;</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Facts_Count">
-          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Measure" UniqueName="[Measures].[Facts Count]" /&gt;</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
         <Field Name="Language_Name">
           <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Level" UniqueName="[Dim Language].[Language Name].[Language Name]" /&gt;</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="Rent_Days">
-          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Measure" UniqueName="[Measures].[Rent Days]" /&gt;</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-<<<<<<< HEAD
         <Field Name="Run_Avg_3M_Day_Amount">
           <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Measure" UniqueName="[Measures].[Run Avg 3M Day Amount]" /&gt;</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
         <Field Name="Run_Avg_3M_Day_Operations_Count">
           <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Measure" UniqueName="[Measures].[Run Avg 3M Day Operations Count]" /&gt;</DataField>
-=======
-        <Field Name="City_Name">
-          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Level" UniqueName="[Dim Geography].[City Name].[City Name]" /&gt;</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Avg_3M_Amount">
-          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Measure" UniqueName="[Measures].[Avg 3M Amount]" /&gt;</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
-        <Field Name="Country_Name">
-          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Level" UniqueName="[Dim Geography].[Country Name].[Country Name]" /&gt;</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Avg_3M_Facts_Count">
-          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Measure" UniqueName="[Measures].[Avg 3M Facts Count]" /&gt;</DataField>
->>>>>>> ad751d738c74d2e36be706dc591b4d8b83542c8c
+        <Field Name="Run_Avg_3M_Rent_Days">
+          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Measure" UniqueName="[Measures].[Run Avg 3M Rent Days]" /&gt;</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="Avg_3M_Rent_Days">
-          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Measure" UniqueName="[Measures].[Avg 3M Rent Days]" /&gt;</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-      </Fields>
-    </DataSet>
-    <DataSet Name="city_name">
-      <Query>
-        <DataSourceName>Sekila_cube</DataSourceName>
-        <CommandText>WITH MEMBER [Measures].[ParameterCaption] AS [Dim Geography].[City Name].CURRENTMEMBER.MEMBER_CAPTION MEMBER [Measures].[ParameterValue] AS [Dim Geography].[City Name].CURRENTMEMBER.UNIQUENAME MEMBER [Measures].[ParameterLevel] AS [Dim Geography].[City Name].CURRENTMEMBER.LEVEL.ORDINAL SELECT {[Measures].[ParameterCaption], [Measures].[ParameterValue], [Measures].[ParameterLevel]} ON COLUMNS , [Dim Geography].[City Name].ALLMEMBERS ON ROWS FROM [Sakila_DWH]</CommandText>
-        <rd:DesignerState>
-          <QueryDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.microsoft.com/AnalysisServices/QueryDefinition">
-            <CommandType>MDX</CommandType>
-            <Type>Query</Type>
-            <QuerySpecification xsi:type="MDXQuerySpecification">
-              <Select>
-                <Items>
-                  <Item>
-                    <ID xsi:type="Measure">
-                      <MeasureName>ParameterCaption</MeasureName>
-                      <UniqueName>[Measures].[ParameterCaption]</UniqueName>
-                    </ID>
-                    <ItemCaption>ParameterCaption</ItemCaption>
-                    <FormattedValue>true</FormattedValue>
-                  </Item>
-                  <Item>
-                    <ID xsi:type="Measure">
-                      <MeasureName>ParameterValue</MeasureName>
-                      <UniqueName>[Measures].[ParameterValue]</UniqueName>
-                    </ID>
-                    <ItemCaption>ParameterValue</ItemCaption>
-                    <FormattedValue>true</FormattedValue>
-                  </Item>
-                  <Item>
-                    <ID xsi:type="Measure">
-                      <MeasureName>ParameterLevel</MeasureName>
-                      <UniqueName>[Measures].[ParameterLevel]</UniqueName>
-                    </ID>
-                    <ItemCaption>ParameterLevel</ItemCaption>
-                    <FormattedValue>true</FormattedValue>
-                  </Item>
-                </Items>
-              </Select>
-              <AutoExecute>false</AutoExecute>
-              <From>Sakila_DWH</From>
-              <Filter>
-                <FilterItems />
-              </Filter>
-              <Calculations />
-              <Aggregates />
-              <QueryProperties />
-            </QuerySpecification>
-            <Query>
-              <Statement>WITH MEMBER [Measures].[ParameterCaption] AS [Dim Geography].[City Name].CURRENTMEMBER.MEMBER_CAPTION MEMBER [Measures].[ParameterValue] AS [Dim Geography].[City Name].CURRENTMEMBER.UNIQUENAME MEMBER [Measures].[ParameterLevel] AS [Dim Geography].[City Name].CURRENTMEMBER.LEVEL.ORDINAL SELECT {[Measures].[ParameterCaption], [Measures].[ParameterValue], [Measures].[ParameterLevel]} ON COLUMNS , [Dim Geography].[City Name].ALLMEMBERS ON ROWS FROM [Sakila_DWH]</Statement>
-              <ParameterDefinitions />
-            </Query>
-          </QueryDefinition>
-        </rd:DesignerState>
-        <rd:AutoGenerated>true</rd:AutoGenerated>
-        <rd:Hidden>true</rd:Hidden>
-      </Query>
-      <Fields>
-        <Field Name="ParameterCaption">
-          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Measure" UniqueName="[Measures].[ParameterCaption]" /&gt;</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="ParameterValue">
-          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Measure" UniqueName="[Measures].[ParameterValue]" /&gt;</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="ParameterLevel">
-          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Measure" UniqueName="[Measures].[ParameterLevel]" /&gt;</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="ParameterCaptionIndented">
-          <Value>=Space(3*Fields!ParameterLevel.Value) + Fields!ParameterCaption.Value</Value>
-          <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
     </DataSet>
@@ -861,7 +703,17 @@ FROM [Sakila_DWH] </Statement>
     <DataSet Name="end_month">
       <Query>
         <DataSourceName>Sekila_cube</DataSourceName>
-        <CommandText>WITH MEMBER [Measures].[ParameterCaption] AS [Dim Date].[Calendar].CURRENTMEMBER.MEMBER_CAPTION MEMBER [Measures].[ParameterValue] AS [Dim Date].[Calendar].CURRENTMEMBER.UNIQUENAME MEMBER [Measures].[ParameterLevel] AS [Dim Date].[Calendar].CURRENTMEMBER.LEVEL.ORDINAL SELECT {[Measures].[ParameterCaption], [Measures].[ParameterValue], [Measures].[ParameterLevel]} ON COLUMNS , [Dim Date].[Calendar].ALLMEMBERS ON ROWS FROM [Sakila_DWH]</CommandText>
+        <QueryParameters>
+          <QueryParameter Name="start_month">
+            <Value>=Parameters!start_month.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>WITH 
+MEMBER [Measures].[ParameterCaption] AS [Dim Date].[Calendar].CURRENTMEMBER.MEMBER_CAPTION MEMBER [Measures].[ParameterValue] AS [Dim Date].[Calendar].CURRENTMEMBER.UNIQUENAME 
+MEMBER [Measures].[ParameterLevel] AS [Dim Date].[Calendar].CURRENTMEMBER.LEVEL.ORDINAL 
+SELECT {[Measures].[ParameterCaption], [Measures].[ParameterValue], [Measures].[ParameterLevel]} ON COLUMNS , 
+(strtomember (@start_month):[Dim Date].[Calendar].[Calendar Year].currenmember.lastsibling.lastchild) ON ROWS 
+FROM [Sakila_DWH]</CommandText>
         <rd:DesignerState>
           <QueryDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.microsoft.com/AnalysisServices/QueryDefinition">
             <CommandType>MDX</CommandType>
@@ -869,6 +721,26 @@ FROM [Sakila_DWH] </Statement>
             <QuerySpecification xsi:type="MDXQuerySpecification">
               <Select>
                 <Items>
+                  <Item>
+                    <ID xsi:type="Level">
+                      <DimensionName>Dim Date</DimensionName>
+                      <HierarchyName>Calendar</HierarchyName>
+                      <HierarchyUniqueName>[Dim Date].[Calendar]</HierarchyUniqueName>
+                      <LevelName>Calendar Year</LevelName>
+                      <UniqueName>[Dim Date].[Calendar].[Calendar Year]</UniqueName>
+                    </ID>
+                    <ItemCaption>Calendar Year</ItemCaption>
+                  </Item>
+                  <Item>
+                    <ID xsi:type="Level">
+                      <DimensionName>Dim Date</DimensionName>
+                      <HierarchyName>Calendar</HierarchyName>
+                      <HierarchyUniqueName>[Dim Date].[Calendar]</HierarchyUniqueName>
+                      <LevelName>Month Number Of Year</LevelName>
+                      <UniqueName>[Dim Date].[Calendar].[Month Number Of Year]</UniqueName>
+                    </ID>
+                    <ItemCaption>Month Number Of Year</ItemCaption>
+                  </Item>
                   <Item>
                     <ID xsi:type="Measure">
                       <MeasureName>ParameterCaption</MeasureName>
@@ -905,18 +777,45 @@ FROM [Sakila_DWH] </Statement>
               <QueryProperties />
             </QuerySpecification>
             <Query>
-              <Statement>WITH MEMBER [Measures].[ParameterCaption] AS [Dim Date].[Calendar].CURRENTMEMBER.MEMBER_CAPTION MEMBER [Measures].[ParameterValue] AS [Dim Date].[Calendar].CURRENTMEMBER.UNIQUENAME MEMBER [Measures].[ParameterLevel] AS [Dim Date].[Calendar].CURRENTMEMBER.LEVEL.ORDINAL SELECT {[Measures].[ParameterCaption], [Measures].[ParameterValue], [Measures].[ParameterLevel]} ON COLUMNS , [Dim Date].[Calendar].ALLMEMBERS ON ROWS FROM [Sakila_DWH]</Statement>
-              <ParameterDefinitions />
+              <Statement>WITH 
+MEMBER [Measures].[ParameterCaption] AS [Dim Date].[Calendar].CURRENTMEMBER.MEMBER_CAPTION MEMBER [Measures].[ParameterValue] AS [Dim Date].[Calendar].CURRENTMEMBER.UNIQUENAME 
+MEMBER [Measures].[ParameterLevel] AS [Dim Date].[Calendar].CURRENTMEMBER.LEVEL.ORDINAL 
+SELECT {[Measures].[ParameterCaption], [Measures].[ParameterValue], [Measures].[ParameterLevel]} ON COLUMNS , 
+(strtomember (@start_month):[Dim Date].[Calendar].[Calendar Year].currenmember.lastsibling.lastchild) ON ROWS 
+FROM [Sakila_DWH]</Statement>
+              <ParameterDefinitions>
+                <ParameterDefinition>
+                  <Name>start_month</Name>
+                  <DefaultValues>
+                    <DefaultValue>[Dim Date].[Calendar].[Month Number Of Year].&amp;[1]&amp;[2005]</DefaultValue>
+                  </DefaultValues>
+                  <Caption>start_month</Caption>
+                  <HierarchyUniqueName>[Dim Date].[Calendar]</HierarchyUniqueName>
+                  <ParameterValuesQuery>
+                    <Statement>WITH MEMBER [Measures].[ParameterCaption] AS [Dim Date].[Calendar].CURRENTMEMBER.MEMBER_CAPTION MEMBER [Measures].[ParameterValue] AS [Dim Date].[Calendar].CURRENTMEMBER.UNIQUENAME MEMBER [Measures].[ParameterLevel] AS [Dim Date].[Calendar].CURRENTMEMBER.LEVEL.ORDINAL SELECT {[Measures].[ParameterCaption], [Measures].[ParameterValue], [Measures].[ParameterLevel]} ON COLUMNS , [Dim Date].[Calendar].ALLMEMBERS ON ROWS FROM [Sakila_DWH]</Statement>
+                    <ParameterizedStatement>
+                      <ReferencedParameters />
+                    </ParameterizedStatement>
+                  </ParameterValuesQuery>
+                </ParameterDefinition>
+              </ParameterDefinitions>
             </Query>
           </QueryDefinition>
         </rd:DesignerState>
-        <rd:AutoGenerated>true</rd:AutoGenerated>
         <rd:Hidden>true</rd:Hidden>
       </Query>
       <Fields>
+        <Field Name="Calendar_Year">
+          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Level" UniqueName="[Dim Date].[Calendar].[Calendar Year]" /&gt;</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
         <Field Name="ParameterCaption">
           <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Measure" UniqueName="[Measures].[ParameterCaption]" /&gt;</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Month_Number_Of_Year">
+          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Level" UniqueName="[Dim Date].[Calendar].[Month Number Of Year]" /&gt;</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="ParameterValue">
           <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Measure" UniqueName="[Measures].[ParameterValue]" /&gt;</DataField>
@@ -936,10 +835,10 @@ FROM [Sakila_DWH] </Statement>
       <Query>
         <DataSourceName>Sekila_cube</DataSourceName>
         <CommandText>WITH 
-MEMBER [Measures].[ParameterCaption] AS [Dim Geography].[Hierarchy].CURRENTMEMBER.MEMBER_CAPTION 
-MEMBER [Measures].[ParameterValue] AS [Dim Geography].[Hierarchy].CURRENTMEMBER.UNIQUENAME MEMBER [Measures].[ParameterLevel] AS [Dim Geography].[Hierarchy].CURRENTMEMBER.LEVEL.ORDINAL SELECT 
+MEMBER [Measures].[ParameterCaption] AS [Dim Geography].[Country Name].CURRENTMEMBER.MEMBER_CAPTION 
+MEMBER [Measures].[ParameterValue] AS [Dim Geography].[Country Name].CURRENTMEMBER.UNIQUENAME MEMBER [Measures].[ParameterLevel] AS [Dim Geography].[Country Name].CURRENTMEMBER.LEVEL.ORDINAL SELECT 
 {[Measures].[ParameterCaption], [Measures].[ParameterValue], [Measures].[ParameterLevel]} ON COLUMNS , 
-[Dim Geography].[Hierarchy].[Country Name].ALLMEMBERS ON ROWS 
+[Dim Geography].[Country Name].ALLMEMBERS ON ROWS 
 FROM [Sakila_DWH]</CommandText>
         <rd:DesignerState>
           <QueryDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.microsoft.com/AnalysisServices/QueryDefinition">
@@ -951,10 +850,10 @@ FROM [Sakila_DWH]</CommandText>
                   <Item>
                     <ID xsi:type="Level">
                       <DimensionName>Dim Geography</DimensionName>
-                      <HierarchyName>Hierarchy</HierarchyName>
-                      <HierarchyUniqueName>[Dim Geography].[Hierarchy]</HierarchyUniqueName>
+                      <HierarchyName>Country Name</HierarchyName>
+                      <HierarchyUniqueName>[Dim Geography].[Country Name]</HierarchyUniqueName>
                       <LevelName>Country Name</LevelName>
-                      <UniqueName>[Dim Geography].[Hierarchy].[Country Name]</UniqueName>
+                      <UniqueName>[Dim Geography].[Country Name].[Country Name]</UniqueName>
                     </ID>
                     <ItemCaption>Country Name</ItemCaption>
                   </Item>
@@ -995,10 +894,10 @@ FROM [Sakila_DWH]</CommandText>
             </QuerySpecification>
             <Query>
               <Statement>WITH 
-MEMBER [Measures].[ParameterCaption] AS [Dim Geography].[Hierarchy].CURRENTMEMBER.MEMBER_CAPTION 
-MEMBER [Measures].[ParameterValue] AS [Dim Geography].[Hierarchy].CURRENTMEMBER.UNIQUENAME MEMBER [Measures].[ParameterLevel] AS [Dim Geography].[Hierarchy].CURRENTMEMBER.LEVEL.ORDINAL SELECT 
+MEMBER [Measures].[ParameterCaption] AS [Dim Geography].[Country Name].CURRENTMEMBER.MEMBER_CAPTION 
+MEMBER [Measures].[ParameterValue] AS [Dim Geography].[Country Name].CURRENTMEMBER.UNIQUENAME MEMBER [Measures].[ParameterLevel] AS [Dim Geography].[Country Name].CURRENTMEMBER.LEVEL.ORDINAL SELECT 
 {[Measures].[ParameterCaption], [Measures].[ParameterValue], [Measures].[ParameterLevel]} ON COLUMNS , 
-[Dim Geography].[Hierarchy].[Country Name].ALLMEMBERS ON ROWS 
+[Dim Geography].[Country Name].ALLMEMBERS ON ROWS 
 FROM [Sakila_DWH]</Statement>
               <ParameterDefinitions />
             </Query>
@@ -1008,7 +907,7 @@ FROM [Sakila_DWH]</Statement>
       </Query>
       <Fields>
         <Field Name="Country_Name">
-          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Level" UniqueName="[Dim Geography].[Hierarchy].[Country Name]" /&gt;</DataField>
+          <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Level" UniqueName="[Dim Geography].[Country Name].[Country Name]" /&gt;</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="ParameterCaption">
@@ -1074,7 +973,6 @@ FROM [Sakila_DWH]</Statement>
                           <PaddingBottom>2pt</PaddingBottom>
                         </Style>
                       </Textbox>
-                      <RowSpan>2</RowSpan>
                     </CellContents>
                   </TablixCornerCell>
                   <TablixCornerCell>
@@ -1113,7 +1011,6 @@ FROM [Sakila_DWH]</Statement>
                           <PaddingBottom>2pt</PaddingBottom>
                         </Style>
                       </Textbox>
-                      <RowSpan>2</RowSpan>
                     </CellContents>
                   </TablixCornerCell>
                   <TablixCornerCell>
@@ -1152,7 +1049,6 @@ FROM [Sakila_DWH]</Statement>
                           <PaddingBottom>2pt</PaddingBottom>
                         </Style>
                       </Textbox>
-                      <RowSpan>2</RowSpan>
                     </CellContents>
                   </TablixCornerCell>
                   <TablixCornerCell>
@@ -1190,7 +1086,6 @@ FROM [Sakila_DWH]</Statement>
                           <PaddingBottom>2pt</PaddingBottom>
                         </Style>
                       </Textbox>
-                      <RowSpan>2</RowSpan>
                     </CellContents>
                   </TablixCornerCell>
                   <TablixCornerCell>
@@ -1228,7 +1123,6 @@ FROM [Sakila_DWH]</Statement>
                           <PaddingBottom>2pt</PaddingBottom>
                         </Style>
                       </Textbox>
-                      <RowSpan>2</RowSpan>
                     </CellContents>
                   </TablixCornerCell>
                   <TablixCornerCell>
@@ -1243,140 +1137,8 @@ FROM [Sakila_DWH]</Statement>
                                 <Value>Category Name</Value>
                                 <Style>
                                   <FontSize>9pt</FontSize>
-<<<<<<< HEAD
                                   <FontWeight>Bold</FontWeight>
                                   <Color>#444446</Color>
-=======
-                                  <Color>#00c4d9</Color>
-                                </Style>
-                              </TextRun>
-                            </TextRuns>
-                            <Style />
-                          </Paragraph>
-                        </Paragraphs>
-                        <rd:DefaultName>Textbox25</rd:DefaultName>
-                        <Style>
-                          <Border>
-                            <Color>LightGrey</Color>
-                            <Style>Solid</Style>
-                          </Border>
-                          <PaddingLeft>2pt</PaddingLeft>
-                          <PaddingRight>2pt</PaddingRight>
-                          <PaddingTop>2pt</PaddingTop>
-                          <PaddingBottom>2pt</PaddingBottom>
-                        </Style>
-                      </Textbox>
-                    </CellContents>
-                  </TablixCornerCell>
-                  <TablixCornerCell>
-                    <CellContents>
-                      <Textbox Name="Textbox26">
-                        <CanGrow>true</CanGrow>
-                        <KeepTogether>true</KeepTogether>
-                        <Paragraphs>
-                          <Paragraph>
-                            <TextRuns>
-                              <TextRun>
-                                <Value />
-                                <Style>
-                                  <FontFamily>Arial</FontFamily>
-                                </Style>
-                              </TextRun>
-                            </TextRuns>
-                            <Style />
-                          </Paragraph>
-                        </Paragraphs>
-                        <rd:DefaultName>Textbox26</rd:DefaultName>
-                        <Style>
-                          <Border>
-                            <Color>LightGrey</Color>
-                            <Style>Solid</Style>
-                          </Border>
-                          <PaddingLeft>2pt</PaddingLeft>
-                          <PaddingRight>2pt</PaddingRight>
-                          <PaddingTop>2pt</PaddingTop>
-                          <PaddingBottom>2pt</PaddingBottom>
-                        </Style>
-                      </Textbox>
-                    </CellContents>
-                  </TablixCornerCell>
-                  <TablixCornerCell>
-                    <CellContents>
-                      <Textbox Name="Textbox75">
-                        <CanGrow>true</CanGrow>
-                        <KeepTogether>true</KeepTogether>
-                        <Paragraphs>
-                          <Paragraph>
-                            <TextRuns>
-                              <TextRun>
-                                <Value />
-                                <Style>
-                                  <FontFamily>Arial</FontFamily>
-                                </Style>
-                              </TextRun>
-                            </TextRuns>
-                            <Style />
-                          </Paragraph>
-                        </Paragraphs>
-                        <rd:DefaultName>Textbox75</rd:DefaultName>
-                        <Style>
-                          <Border>
-                            <Color>LightGrey</Color>
-                            <Style>Solid</Style>
-                          </Border>
-                          <PaddingLeft>2pt</PaddingLeft>
-                          <PaddingRight>2pt</PaddingRight>
-                          <PaddingTop>2pt</PaddingTop>
-                          <PaddingBottom>2pt</PaddingBottom>
-                        </Style>
-                      </Textbox>
-                    </CellContents>
-                  </TablixCornerCell>
-                  <TablixCornerCell>
-                    <CellContents>
-                      <Textbox Name="Textbox79">
-                        <CanGrow>true</CanGrow>
-                        <KeepTogether>true</KeepTogether>
-                        <Paragraphs>
-                          <Paragraph>
-                            <TextRuns>
-                              <TextRun>
-                                <Value />
-                                <Style>
-                                  <FontFamily>Arial</FontFamily>
-                                </Style>
-                              </TextRun>
-                            </TextRuns>
-                            <Style />
-                          </Paragraph>
-                        </Paragraphs>
-                        <rd:DefaultName>Textbox79</rd:DefaultName>
-                        <Style>
-                          <Border>
-                            <Color>LightGrey</Color>
-                            <Style>Solid</Style>
-                          </Border>
-                          <PaddingLeft>2pt</PaddingLeft>
-                          <PaddingRight>2pt</PaddingRight>
-                          <PaddingTop>2pt</PaddingTop>
-                          <PaddingBottom>2pt</PaddingBottom>
-                        </Style>
-                      </Textbox>
-                    </CellContents>
-                  </TablixCornerCell>
-                  <TablixCornerCell>
-                    <CellContents>
-                      <Textbox Name="Textbox64">
-                        <CanGrow>true</CanGrow>
-                        <KeepTogether>true</KeepTogether>
-                        <Paragraphs>
-                          <Paragraph>
-                            <TextRuns>
-                              <TextRun>
-                                <Value />
-                                <Style>
-                                  <FontFamily>Arial</FontFamily>
->>>>>>> ad751d738c74d2e36be706dc591b4d8b83542c8c
                                 </Style>
                               </TextRun>
                             </TextRuns>
@@ -1391,27 +1153,15 @@ FROM [Sakila_DWH]</Statement>
                             <Color>LightGrey</Color>
                             <Style>Solid</Style>
                           </Border>
-<<<<<<< HEAD
                           <VerticalAlign>Middle</VerticalAlign>
-=======
->>>>>>> ad751d738c74d2e36be706dc591b4d8b83542c8c
                           <PaddingLeft>2pt</PaddingLeft>
                           <PaddingRight>2pt</PaddingRight>
                           <PaddingTop>2pt</PaddingTop>
                           <PaddingBottom>2pt</PaddingBottom>
                         </Style>
                       </Textbox>
-                      <RowSpan>2</RowSpan>
                     </CellContents>
                   </TablixCornerCell>
-                </TablixCornerRow>
-                <TablixCornerRow>
-                  <TablixCornerCell />
-                  <TablixCornerCell />
-                  <TablixCornerCell />
-                  <TablixCornerCell />
-                  <TablixCornerCell />
-                  <TablixCornerCell />
                 </TablixCornerRow>
               </TablixCornerRows>
             </TablixCorner>
@@ -1424,7 +1174,7 @@ FROM [Sakila_DWH]</Statement>
                   <Width>2.5cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.5cm</Width>
+                  <Width>2.09783cm</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
@@ -1433,24 +1183,28 @@ FROM [Sakila_DWH]</Statement>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Avg_3M_Amount">
+                        <Textbox Name="Run_Avg_3M_Day_Amount">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Avg(Fields!Avg_3M_Amount.Value)</Value>
+                                  <Value>=IIF (IsNothing(Avg(Fields!Run_Avg_3M_Day_Amount.Value)), 0, round(AVG(Fields!Run_Avg_3M_Day_Amount.Value),2))</Value>
                                   <Style>
+                                    <FontFamily>Arial</FontFamily>
                                     <FontSize>9pt</FontSize>
+                                    <Format>0.00'$';(0.00'$')</Format>
                                     <Color>#444446</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Right</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Avg_3M_Amount</rd:DefaultName>
+                          <rd:DefaultName>Run_Avg_3M_Day_Amount</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -1460,20 +1214,21 @@ FROM [Sakila_DWH]</Statement>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
                             <PaddingBottom>2pt</PaddingBottom>
+                            <rd:FormatSymbolCulture>en-US</rd:FormatSymbolCulture>
                           </Style>
                         </Textbox>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Avg_3M_Facts_Count">
+                        <Textbox Name="Run_Avg_3M_Day_Operations_Count">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Avg(Fields!Avg_3M_Facts_Count.Value)</Value>
+                                  <Value>=IIF(IsNothing(Avg(Fields!Run_Avg_3M_Day_Operations_Count.Value)), 0, round(Avg(Fields!Run_Avg_3M_Day_Operations_Count.Value),2))</Value>
                                   <Style>
                                     <FontFamily>Arial</FontFamily>
                                     <FontSize>9pt</FontSize>
@@ -1481,10 +1236,12 @@ FROM [Sakila_DWH]</Statement>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Right</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Avg_3M_Facts_Count</rd:DefaultName>
+                          <rd:DefaultName>Run_Avg_3M_Day_Operations_Count</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -1507,19 +1264,18 @@ FROM [Sakila_DWH]</Statement>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-<<<<<<< HEAD
                                   <Value>=IIF (IsNothing(Avg(Fields!Run_Avg_3M_Rent_Days.Value)), "0 days", CStr(round(AVG(Fields!Run_Avg_3M_Rent_Days.Value),2)) + " days")</Value>
-=======
-                                  <Value>=Avg(Fields!Avg_3M_Rent_Days.Value)</Value>
->>>>>>> ad751d738c74d2e36be706dc591b4d8b83542c8c
                                   <Style>
                                     <FontFamily>Arial</FontFamily>
                                     <FontSize>9pt</FontSize>
+                                    <Format>0.00;(0.00)</Format>
                                     <Color>#444446</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Right</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Avg_3M_Rent_Days</rd:DefaultName>
@@ -1566,11 +1322,14 @@ FROM [Sakila_DWH]</Statement>
                                 <Value>=Fields!Country_Name.Value</Value>
                                 <Style>
                                   <FontSize>9pt</FontSize>
+                                  <FontWeight>Bold</FontWeight>
                                   <Color>#444446</Color>
                                 </Style>
                               </TextRun>
                             </TextRuns>
-                            <Style />
+                            <Style>
+                              <TextAlign>Center</TextAlign>
+                            </Style>
                           </Paragraph>
                         </Paragraphs>
                         <rd:DefaultName>Country_Name</rd:DefaultName>
@@ -1588,131 +1347,9 @@ FROM [Sakila_DWH]</Statement>
                     </CellContents>
                   </TablixHeader>
                   <TablixMembers>
-                    <TablixMember>
-                      <Group Name="City_Name">
-                        <GroupExpressions>
-                          <GroupExpression>=Fields!City_Name.Value</GroupExpression>
-                        </GroupExpressions>
-                      </Group>
-                      <SortExpressions>
-                        <SortExpression>
-                          <Value>=Fields!City_Name.Value</Value>
-                        </SortExpression>
-                      </SortExpressions>
-                      <TablixHeader>
-                        <Size>0.6cm</Size>
-                        <CellContents>
-                          <Textbox Name="City_Name">
-                            <CanGrow>true</CanGrow>
-                            <KeepTogether>true</KeepTogether>
-                            <Paragraphs>
-                              <Paragraph>
-                                <TextRuns>
-                                  <TextRun>
-                                    <Value>=Fields!City_Name.Value</Value>
-                                    <Style>
-                                      <FontFamily>Arial</FontFamily>
-                                      <FontSize>9pt</FontSize>
-                                      <Color>#444446</Color>
-                                    </Style>
-                                  </TextRun>
-                                </TextRuns>
-                                <Style />
-                              </Paragraph>
-                            </Paragraphs>
-                            <rd:DefaultName>City_Name</rd:DefaultName>
-                            <Style>
-                              <Border>
-                                <Color>LightGrey</Color>
-                                <Style>Solid</Style>
-                              </Border>
-                              <PaddingLeft>2pt</PaddingLeft>
-                              <PaddingRight>2pt</PaddingRight>
-                              <PaddingTop>2pt</PaddingTop>
-                              <PaddingBottom>2pt</PaddingBottom>
-                            </Style>
-                          </Textbox>
-                        </CellContents>
-                      </TablixHeader>
-                      <TablixMembers>
-<<<<<<< HEAD
-                        <TablixMember />
-                        <TablixMember />
-                        <TablixMember />
-=======
-                        <TablixMember>
-                          <Group Name="Full_Name">
-                            <GroupExpressions>
-                              <GroupExpression>=Fields!Full_Name.Value</GroupExpression>
-                            </GroupExpressions>
-                          </Group>
-                          <SortExpressions>
-                            <SortExpression>
-                              <Value>=Fields!Full_Name.Value</Value>
-                            </SortExpression>
-                          </SortExpressions>
-                          <TablixHeader>
-                            <Size>0.6cm</Size>
-                            <CellContents>
-                              <Textbox Name="Full_Name">
-                                <CanGrow>true</CanGrow>
-                                <KeepTogether>true</KeepTogether>
-                                <Paragraphs>
-                                  <Paragraph>
-                                    <TextRuns>
-                                      <TextRun>
-                                        <Value>=Fields!Full_Name.Value</Value>
-                                        <ActionInfo>
-                                          <Actions>
-                                            <Action>
-                                              <Drillthrough>
-                                                <ReportName>Employee details</ReportName>
-                                                <Parameters>
-                                                  <Parameter Name="employee">
-                                                    <Value>=Fields!Employee_Id.Value</Value>
-                                                  </Parameter>
-                                                </Parameters>
-                                              </Drillthrough>
-                                            </Action>
-                                          </Actions>
-                                        </ActionInfo>
-                                        <Style>
-                                          <FontFamily>Arial</FontFamily>
-                                          <FontSize>9pt</FontSize>
-                                          <FontWeight>Bold</FontWeight>
-                                          <Color>#00c4d9</Color>
-                                        </Style>
-                                      </TextRun>
-                                    </TextRuns>
-                                    <Style />
-                                  </Paragraph>
-                                </Paragraphs>
-                                <rd:DefaultName>Full_Name</rd:DefaultName>
-                                <Style>
-                                  <Border>
-                                    <Color>LightGrey</Color>
-                                    <Style>Solid</Style>
-                                  </Border>
-                                  <PaddingLeft>2pt</PaddingLeft>
-                                  <PaddingRight>2pt</PaddingRight>
-                                  <PaddingTop>2pt</PaddingTop>
-                                  <PaddingBottom>2pt</PaddingBottom>
-                                </Style>
-                              </Textbox>
-                            </CellContents>
-                          </TablixHeader>
-                          <TablixMembers>
-                            <TablixMember />
-                            <TablixMember />
-                            <TablixMember />
-                          </TablixMembers>
-                        </TablixMember>
->>>>>>> ad751d738c74d2e36be706dc591b4d8b83542c8c
-                      </TablixMembers>
-                      <Visibility>
-                        <ToggleItem>Country_Name</ToggleItem>
-                      </Visibility>
-                    </TablixMember>
+                    <TablixMember />
+                    <TablixMember />
+                    <TablixMember />
                   </TablixMembers>
                 </TablixMember>
               </TablixMembers>
@@ -1834,11 +1471,7 @@ FROM [Sakila_DWH]</Statement>
                                   <Paragraph>
                                     <TextRuns>
                                       <TextRun>
-<<<<<<< HEAD
                                         <Value>=Fields!Month_Number_Of_Year.Value</Value>
-=======
-                                        <Value>=Fields!Original_Language.Value</Value>
->>>>>>> ad751d738c74d2e36be706dc591b4d8b83542c8c
                                         <Style>
                                           <FontFamily>Arial</FontFamily>
                                           <FontSize>9pt</FontSize>
@@ -1885,11 +1518,7 @@ FROM [Sakila_DWH]</Statement>
                                       <Paragraph>
                                         <TextRuns>
                                           <TextRun>
-<<<<<<< HEAD
-                                            <Value>=IIF(ISNOTHING(Fields!Original_Language.Value), "All languages", Fields!Original_Language.Value)</Value>
-=======
-                                            <Value>=Fields!Language_Name.Value</Value>
->>>>>>> ad751d738c74d2e36be706dc591b4d8b83542c8c
+                                            <Value>=Fields!Original_Language.Value</Value>
                                             <Style>
                                               <FontFamily>Arial</FontFamily>
                                               <FontSize>9pt</FontSize>
@@ -1936,11 +1565,7 @@ FROM [Sakila_DWH]</Statement>
                                           <Paragraph>
                                             <TextRuns>
                                               <TextRun>
-<<<<<<< HEAD
-                                                <Value>=IIF(IsNothing(Fields!Language_Name.Value), "All languages", Fields!Language_Name.Value)</Value>
-=======
-                                                <Value>=Fields!Category_Name.Value</Value>
->>>>>>> ad751d738c74d2e36be706dc591b4d8b83542c8c
+                                                <Value>=Fields!Language_Name.Value</Value>
                                                 <Style>
                                                   <FontFamily>Arial</FontFamily>
                                                   <FontSize>9pt</FontSize>
@@ -1987,7 +1612,7 @@ FROM [Sakila_DWH]</Statement>
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value>=IIF(IsNoThing(Fields!Category_Name.Value), "All categories", Fields!Category_Name.Value)</Value>
+                                                    <Value>=Fields!Category_Name.Value</Value>
                                                     <Style>
                                                       <FontFamily>Arial</FontFamily>
                                                       <FontSize>9pt</FontSize>
@@ -2034,13 +1659,8 @@ FROM [Sakila_DWH]</Statement>
             <DataSetName>DataSet1</DataSetName>
             <Top>1.71452cm</Top>
             <Left>0cm</Left>
-<<<<<<< HEAD
-            <Height>1.8cm</Height>
-            <Width>21.18767cm</Width>
-=======
-            <Height>2.4cm</Height>
-            <Width>20cm</Width>
->>>>>>> ad751d738c74d2e36be706dc591b4d8b83542c8c
+            <Height>1.2cm</Height>
+            <Width>22.09783cm</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -2070,11 +1690,7 @@ FROM [Sakila_DWH]</Statement>
             </Paragraphs>
             <rd:DefaultName>Textbox11</rd:DefaultName>
             <Height>0.33056in</Height>
-<<<<<<< HEAD
-            <Width>8.3416in</Width>
-=======
-            <Width>5.47in</Width>
->>>>>>> ad751d738c74d2e36be706dc591b4d8b83542c8c
+            <Width>8.69993in</Width>
             <ZIndex>1</ZIndex>
             <Style>
               <Border>
@@ -2095,7 +1711,7 @@ FROM [Sakila_DWH]</Statement>
                 <TextRuns>
                   <TextRun>
                     <Label>Title</Label>
-                    <Value>="FOR THE PERIOD FROM " + Parameters!start_month.Value + " TO " + Parameters!end_month.Value</Value>
+                    <Value>="FOR THE PERIOD FROM " + Parameters!start_month.Label + " TO " + Parameters!end_month.Label</Value>
                     <Style>
                       <FontWeight>Bold</FontWeight>
                       <Color>White</Color>
@@ -2108,13 +1724,9 @@ FROM [Sakila_DWH]</Statement>
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox11</rd:DefaultName>
-            <Top>0.34445in</Top>
+            <Top>0.33056in</Top>
             <Height>0.33056in</Height>
-<<<<<<< HEAD
-            <Width>8.3416in</Width>
-=======
-            <Width>5.47in</Width>
->>>>>>> ad751d738c74d2e36be706dc591b4d8b83542c8c
+            <Width>8.69993in</Width>
             <ZIndex>2</ZIndex>
             <Style>
               <Border>
@@ -2128,14 +1740,10 @@ FROM [Sakila_DWH]</Statement>
             </Style>
           </Textbox>
         </ReportItems>
-        <Height>4.71452cm</Height>
+        <Height>2.91452cm</Height>
         <Style />
       </Body>
-<<<<<<< HEAD
-      <Width>28.68767cm</Width>
-=======
-      <Width>20cm</Width>
->>>>>>> ad751d738c74d2e36be706dc591b4d8b83542c8c
+      <Width>22.09783cm</Width>
       <Page>
         <PageHeight>29.7cm</PageHeight>
         <PageWidth>21cm</PageWidth>
@@ -2169,7 +1777,7 @@ FROM [Sakila_DWH]</Statement>
       <DataType>String</DataType>
       <DefaultValue>
         <Values>
-          <Value>[Dim Date].[Calendar].[Month Number Of Year].&amp;[12]&amp;[2018]</Value>
+          <Value>[Dim Date].[Calendar].[Month Number Of Year].&amp;[12]&amp;[2006]</Value>
         </Values>
       </DefaultValue>
       <Prompt>End month</Prompt>
@@ -2181,50 +1789,12 @@ FROM [Sakila_DWH]</Statement>
         </DataSetReference>
       </ValidValues>
     </ReportParameter>
-    <ReportParameter Name="employee">
-      <DataType>String</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>[Dim Employee].[Full Name].&amp;[ERNESTUS CORNELISSEN]</Value>
-        </Values>
-      </DefaultValue>
-      <Prompt>Employee</Prompt>
-      <ValidValues>
-        <DataSetReference>
-          <DataSetName>employee</DataSetName>
-          <ValueField>ParameterValue</ValueField>
-          <LabelField>ParameterCaptionIndented</LabelField>
-        </DataSetReference>
-      </ValidValues>
-      <MultiValue>true</MultiValue>
-    </ReportParameter>
-    <ReportParameter Name="city_name">
-      <DataType>String</DataType>
-      <DefaultValue>
-        <Values>
-<<<<<<< HEAD
-          <Value>[Dim Geography].[Hierarchy].[City Name].&amp;[BELZ]&amp;[25]</Value>
-          <Value>[Dim Geography].[Hierarchy].[City Name].&amp;[BERESTECHKO]&amp;[27]</Value>
-=======
-          <Value>[Dim Geography].[City Name].&amp;[BELZ]&amp;[25]</Value>
->>>>>>> ad751d738c74d2e36be706dc591b4d8b83542c8c
-        </Values>
-      </DefaultValue>
-      <Prompt>City</Prompt>
-      <ValidValues>
-        <DataSetReference>
-          <DataSetName>city_name</DataSetName>
-          <ValueField>ParameterValue</ValueField>
-          <LabelField>ParameterCaptionIndented</LabelField>
-        </DataSetReference>
-      </ValidValues>
-      <MultiValue>true</MultiValue>
-    </ReportParameter>
     <ReportParameter Name="country">
       <DataType>String</DataType>
       <DefaultValue>
         <Values>
           <Value>[Dim Geography].[Country Name].&amp;[UKRAINE]</Value>
+          <Value>[Dim Geography].[Country Name].&amp;[UNITED STATES]</Value>
         </Values>
       </DefaultValue>
       <Prompt>Country</Prompt>
@@ -2237,11 +1807,29 @@ FROM [Sakila_DWH]</Statement>
       </ValidValues>
       <MultiValue>true</MultiValue>
     </ReportParameter>
+    <ReportParameter Name="employee">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>[Dim Employee].[Full Name].&amp;[ADIANA LANYON]</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Employee</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>employee</DataSetName>
+          <ValueField>ParameterValue</ValueField>
+          <LabelField>ParameterCaptionIndented</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
     <ReportParameter Name="category_name">
       <DataType>String</DataType>
       <DefaultValue>
         <Values>
           <Value>[Dim Category].[Category Name].&amp;[Action]</Value>
+          <Value>[Dim Category].[Category Name].&amp;[Adventure]</Value>
         </Values>
       </DefaultValue>
       <Prompt>Category</Prompt>
@@ -2295,7 +1883,7 @@ FROM [Sakila_DWH]</Statement>
       <NumberOfRows>3</NumberOfRows>
       <CellDefinitions>
         <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
+          <ColumnIndex>1</ColumnIndex>
           <RowIndex>1</RowIndex>
           <ParameterName>employee</ParameterName>
         </CellDefinition>
@@ -2308,11 +1896,6 @@ FROM [Sakila_DWH]</Statement>
           <ColumnIndex>2</ColumnIndex>
           <RowIndex>2</RowIndex>
           <ParameterName>translation_language</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>1</ColumnIndex>
-          <RowIndex>1</RowIndex>
-          <ParameterName>city_name</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
@@ -2330,7 +1913,7 @@ FROM [Sakila_DWH]</Statement>
           <ParameterName>category_name</ParameterName>
         </CellDefinition>
         <CellDefinition>
-          <ColumnIndex>2</ColumnIndex>
+          <ColumnIndex>0</ColumnIndex>
           <RowIndex>1</RowIndex>
           <ParameterName>country</ParameterName>
         </CellDefinition>
